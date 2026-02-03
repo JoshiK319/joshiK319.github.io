@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kishor Joshi | Portfolio</title>
+  <meta name="description" content="Portfolio of Kishor Joshi — Ph.D. student in ECE (Power Electronics, Motor Drives, Controls)">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav>
+    <div class="container inner">
+      <div style="font-weight:800;color:#cfe8ff">KJ</div>
+      <div>
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Projects</a>
+        <a href="#publications">Publications</a>
+        <a href="#education">Education</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <header>
+    <div class="container grid">
+      <img src="assets/profile.jpg" alt="Profile photo of Kishor Joshi" />
+      <div>
+        <div class="tag">Power Electronics • Motor Drives • Controls</div>
+        <h1>Kishor Joshi</h1>
+        <p class="lead">Ph.D. student in Electrical & Computer Engineering at Mississippi State University. Research and hands‑on work in high‑speed PMSM control (DTC/FOC), hardware‑in‑the‑loop systems, and power electronics for drives and power conversion.</p>
+        <div class="badges" style="margin-top:16px">
+          <a class="btn" href="assets/Kishor_Joshi_Resume.pdf" target="_blank" rel="noopener">Download Resume</a>
+          <a class="btn" href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn" href="https://www.linkedin.com/in/kishor-joshi-509b46186" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="about">
+    <div class="container">
+      <h2>About</h2>
+      <p>I work at the intersection of power electronics and control. My recent projects include high‑speed motor drives using Direct Torque Control, modified PFC design, and real‑time HIL validation using Plecs/RT‑Box. I enjoy translating modeling and control theory into robust, testable implementations.</p>
+      <ul class="clean">
+        <li>Core tools: MATLAB/Simulink, Plecs/RT‑Box, Python, ETAP, PSIM</li>
+        <li>Domains: Motor drive control (FOC/DTC), power converters, ePLL/PI/PID control</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="container">
+      <h2>Experience</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>Cummins Inc — Power Electronics Control & System Integration (Intern)</h3>
+          <div class="meta">Fridley, MN • May 2025 – Aug 2025</div>
+          <ul class="clean">
+            <li>Designed ultra‑high‑speed PMSM drive system with FOC & DTC; evaluated control performance in SIL/HIL.</li>
+            <li>Integrated TI LaunchPad with lumped‑sum HIL FPGA; supported DC‑DC controls development.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Mississippi State University — Graduate Teaching Assistant</h3>
+          <div class="meta">Starkville, MS • Jan 2022 – Present</div>
+          <ul class="clean">
+            <li>Prepared course materials, graded labs/exams, and mentored students in problem solving.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Advanced College of Engineering & Management — Assistant Lecturer</h3>
+          <div class="meta">Kathmandu, Nepal • Apr 2022 – Dec 2022</div>
+          <ul class="clean">
+            <li>Taught Electrical Circuits & Control Systems; supervised Power Electronics & Machines labs.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Prism International – DLRMP — Project Engineer</h3>
+          <div class="meta">Lalitpur, Nepal • Jan 2019 – Apr 2021</div>
+          <ul class="clean">
+            <li>Estimated technical distribution losses; developed Newton–Raphson based line‑loss program.</li>
+            <li>Coordinated data collection across 20 substations and compiled NEA loss‑reduction report.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="container">
+      <h2>Selected Projects</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>High‑Speed Motor Control</h3>
+          <div class="meta">MSU</div>
+          <p>Control logic for high‑speed PMSM using Direct Torque Control; system with 450 V DC supply, TI LaunchPad, inverter, and cooling system. Tools: MATLAB, Plecs, RT‑Box, PI controller.</p>
+        </div>
+        <div class="card">
+          <h3>Modified PFC</h3>
+          <p>Control logic for a power‑factor converter modeled in MATLAB/Simulink and validated in HIL (Plecs/RT‑Box) for 400 V output. Tools: ePLL, PI.</p>
+        </div>
+        <div class="card">
+          <h3>PV‑STATCOM</h3>
+          <p>Enabled a PV inverter to provide active/reactive power based on irradiance to improve utilization. Tools: MATLAB/Simulink, PSIM.</p>
+        </div>
+        <div class="card">
+          <h3>Wind–Solar Hybrid System</h3>
+          <p>Modeled a 20 kW wind + 15 kW PV hybrid with storage for an off‑grid case study; performed load analysis and controls evaluation.</p>
+        </div>
+        <div class="card">
+          <h3>Controlled Rectifier Studies</h3>
+          <p>Compared harmonic performance and PF of GTO vs. Thyristor rectifiers for isolated micro‑grid loads.</p>
+        </div>
+        <div class="card">
+          <h3>Load Flow & Cost Estimation Tools</h3>
+          <p>Implemented distribution load‑flow (Newton–Raphson) for 10/20/30‑bus systems and transmission line cost estimation utilities.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="publications">
+    <div class="container">
+      <h2>Publications</h2>
+      <ul class="clean">
+        <li>K. Joshi, S. Bimali, P. Karki, T. Aryal, I. Tamrakar. “Implementation of PV‑Solar Inverter STATCOM in Grid Connected System (PV‑STATCOM).” Journal of the IOE, 2019. <a href="https://www.researchgate.net/publication/346900646_Implementation_of_Solar-PV_Inverter_as_STATCOM_during_Nighttime_in_Grid-Connected_System_PV-STATCOM" target="_blank" rel="noopener">Link</a></li>
+        <li>K. Thapa, A. Maharjan, K. Kaphle, K. Joshi, M. Rauniyar, T. Aryal. “Modeling of Wind–Solar Hybrid Systems for Off‑Grid in Nepal and A Case Study.” Journal of the IOE, 2019. <a href="https://www.researchgate.net/publication/347252886_Paper_Modeling_of_Wind-Solar_Hybrid_Power_System_for_Off-Grid_in_Nepal_and_a_Case_Study" target="_blank" rel="noopener">Link</a></li>
+        <li>Md Moniruzzaman, K. Joshi, Md R. Rahman, Md K. Islam, S. Choi, M. K. Ghartemani. “Implementation and Analysis of Direct Torque Control on High‑Speed PMSMs: A Comparative Study of Commercial and Laboratory‑Developed Motors.” APEC 2025. <a href="https://doi.org/10.1109/APEC48143.2025.10977544" target="_blank" rel="noopener">DOI</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="education">
+    <div class="container">
+      <h2>Education</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>Ph.D., Electrical & Computer Engineering</h3>
+          <div class="meta">Mississippi State University • 2023 – Present</div>
+          <p>GPA: 4.0 • Expected Graduation: Dec 2027. Coursework includes Power Electronics, Feedback Control I/II, Non‑linear/Optimal Control, Power Systems (analysis, stability, optimization), High‑Frequency Power Electronics.</p>
+        </div>
+        <div class="card">
+          <h3>Bachelor’s in Electrical Engineering</h3>
+          <div class="meta">IOE Pulchowk Campus, Tribhuvan University • 2014 – 2018</div>
+          <p>Percentage: 83%. Thesis: “Implementation of PV‑Solar Inverter STATCOM in Grid Connected System (PV‑STATCOM).”</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="container">
+      <h2>Contact</h2>
+      <p>Email: <a href="mailto:kj1377@msstate.edu">kj1377@msstate.edu</a></p>
+      <p>LinkedIn: <a href="https://www.linkedin.com/in/kishor-joshi-509b46186" target="_blank" rel="noopener">linkedin.com/in/kishor-joshi-509b46186</a></p>
+      <p>GitHub: <a href="https://github.com/your-username" target="_blank" rel="noopener">github.com/your-username</a></p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">© {year} Kishor Joshi</div>
+  </footer>
+  <script>
+    document.querySelector('footer .container').innerHTML = `© ${new Date().getFullYear()} Kishor Joshi`;
+  </script>
+</body>
+</html>

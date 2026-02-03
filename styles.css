@@ -1,0 +1,36 @@
+
+:root{
+  --bg:#0b0f17; /* deep navy */
+  --panel:#111827; /* dark panel */
+  --text:#e6f1ff; /* light text */
+  --muted:#8892b0; /* muted */
+  --accent:#64ffda; /* teal */
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family: Inter, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+.container{max-width:980px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;background:rgba(11,15,23,0.8);backdrop-filter:blur(6px);border-bottom:1px solid #142036;z-index:50}
+nav .inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+nav a{color:var(--muted);text-decoration:none;margin-left:18px;font-weight:600}
+nav a:hover{color:var(--accent)}
+header{padding:56px 0 24px;border-bottom:1px solid #142036;background:linear-gradient(180deg, rgba(100,255,218,0.06), rgba(0,0,0,0))}
+header .grid{display:grid;grid-template-columns:160px 1fr;gap:28px;align-items:center}
+header img{width:160px;height:160px;border-radius:50%;border:2px solid #142036;object-fit:cover}
+.tag{color:var(--accent);font-weight:700;letter-spacing:0.06em;font-size:12px;text-transform:uppercase}
+h1{font-size:34px;margin:6px 0 8px}
+.lead{color:var(--muted);font-size:16px}
+.btn{display:inline-block;border:1px solid var(--accent);color:var(--accent);padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:700}
+.btn:hover{background:rgba(100,255,218,0.07)}
+section{padding:36px 0;border-bottom:1px solid #142036}
+section h2{font-size:22px;margin:0 0 12px;color:#cfe8ff}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid #142036;border-radius:12px;padding:16px}
+.card h3{margin:0 0 6px}
+.card .meta{color:var(--muted);font-size:13px;margin-bottom:8px}
+ul.clean{margin:8px 0 0 18px}
+ul.clean li{margin:4px 0}
+footer{padding:30px 0;color:var(--muted);text-align:center}
+.badges a{margin-right:10px}
+@media (max-width:640px){header .grid{grid-template-columns:1fr;}
+header img{justify-self:center}}
