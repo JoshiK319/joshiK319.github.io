@@ -218,3 +218,41 @@ img { image-rendering: auto; }
 /* Optional focus utilities for special crops */
 /* .focus-top img   { object-position: center 20%; } */
 /* .focus-bottom img{ object-position: center 80%; } */
+/* --- Sub-project gallery: two columns on desktop, one on mobile --- */
+.exp-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)); /* two columns */
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.exp-gallery .exp-tile {
+  background: var(--panel);
+  border: 1px solid #142036;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.exp-gallery .exp-tile img {
+  width: 100%;
+  height: auto;             /* preserve aspect ratio */
+  display: block;
+  object-fit: cover;        /* in case you set a fixed height later */
+}
+
+.exp-gallery .exp-tile figcaption {
+  padding: 8px 12px;
+  font-size: 13.5px;
+  color: var(--text);
+  background: rgba(11,15,23,0.75);
+  border-top: 1px solid #142036;
+  backdrop-filter: blur(2px);
+  line-height: 1.45;
+}
+
+/* Mobile: stack to one column */
+@media (max-width: 700px) {
+  .exp-gallery {
+    grid-template-columns: 1fr;
+  }
+}
