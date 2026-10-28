@@ -4,14 +4,81 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kishor Joshi | Portfolio</title>
-  <meta name="description" content="Portfolio of Kishor Joshi — Ph.D. student in ECE (Power Electronics, Motor Drives, Controls)">
+  <meta name="description" content="Portfolio of Kishor Joshi — Ph.D. student in ECE (Power Electronics, Motor Drives, Controls)" />
   <link rel="stylesheet" href="styles.css" />
+  <script defer src="java.js"></script>
 </head>
-<body>
-  <nav>
+<body id="top">
+
+  <svg width="0" height="0" class="svg-sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-github" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+        <path d="M9 18c-4.51 2-5-2-7-2"/>
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+        <rect width="4" height="12" x="2" y="9"/>
+        <circle cx="4" cy="4" r="2"/>
+      </symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect width="20" height="16" x="2" y="4" rx="2"/>
+        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+      </symbol>
+      <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" x2="12" y1="15" y2="3"/>
+      </symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+        <circle cx="12" cy="10" r="3"/>
+      </symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 2v4"/><path d="M16 2v4"/>
+        <rect width="18" height="18" x="3" y="4" rx="2"/>
+        <path d="M3 10h18"/>
+      </symbol>
+      <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 3h6v6"/><path d="M10 14 21 3"/>
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+      </symbol>
+      <symbol id="i-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>
+      </symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/>
+      </symbol>
+      <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+      </symbol>
+      <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
+      </symbol>
+      <symbol id="i-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        <rect width="20" height="14" x="2" y="6" rx="2"/>
+      </symbol>
+      <symbol id="i-cap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/>
+        <path d="M22 10v6"/>
+        <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="scroll-progress" aria-hidden="true"><div class="scroll-progress-bar" id="scrollBar"></div></div>
+
+  <nav id="navbar">
     <div class="container inner">
-      <div style="font-weight:800;color:#cfe8ff">KJ</div>
-      <div>
+      <a href="#top" class="brand">KJ</a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks">
+        <svg class="ic ic-menu"><use href="#i-menu"></use></svg>
+        <svg class="ic ic-close"><use href="#i-close"></use></svg>
+      </button>
+
+      <div class="nav-links" id="navLinks">
         <a href="#about">About</a>
         <a href="#experience">Experience</a>
         <a href="#projects">Projects</a>
@@ -23,8 +90,8 @@
   </nav>
 
   <header>
-    <div class="container grid">
-      <img src="assets/profile.jpg" alt="Profile photo of Kishor Joshi" />
+    <div class="container header-grid">
+      <img class="avatar" src="assets/profile.jpg" alt="Profile photo of Kishor Joshi" />
       <div>
         <div class="tag">Power Electronics • Motor Drives • Controls</div>
         <h1>Kishor Joshi</h1>
@@ -32,37 +99,42 @@
         <p class="lead">
           Ph.D. Student | Power Electronics &amp; Motor Drives | High‑Speed PMSM Control | Advanced Control Systems
         </p>
-        <p class="lead" style="margin-top:10px;">
+        <p class="lead">
           Ph.D. student in Electrical &amp; Computer Engineering at Mississippi State University, specializing in
           high‑performance motor drive control and power electronics for next‑generation energy systems.
           Background spans both industry and research, including work in power distribution, high‑speed PMSM control,
           and hardware‑in‑the‑loop (HIL) validation.
         </p>
-        <p class="lead" style="margin-top:10px;">
+        <p class="lead">
           Research focuses on developing and optimizing control strategies for Ultra High‑Speed PMSM compressors,
           utilizing FOC, DTC, and emerging MIMO‑based control frameworks to achieve robust, high‑bandwidth torque and
           speed regulation. Interested in advanced converter topologies and real‑time control implementation for power
           conversion and electric drive applications.
         </p>
 
-        <div class="badges" style="margin-top:16px">
-          <a class="btn" href="assets/Kishor_Joshi_Resume.pdf" target="_blank" rel="noopener">Download Resume</a>
-          <a class="btn" href="https://github.com/joshiK319" target="_blank" rel="noopener">GitHub</a>
-          <a class="btn" href="https://www.linkedin.com/in/kishor-joshi-509b46186" target="_blank" rel="noopener">LinkedIn</a>
+        <div class="badges">
+          <a class="btn btn-primary" href="assets/kishor_joshi_resume.pdf" target="_blank" rel="noopener">
+            <svg class="ic"><use href="#i-download"></use></svg> Download Resume
+          </a>
+          <a class="btn" href="https://github.com/joshiK319" target="_blank" rel="noopener">
+            <svg class="ic"><use href="#i-github"></use></svg> GitHub
+          </a>
+          <a class="btn" href="https://www.linkedin.com/in/kishor-joshi-509b46186" target="_blank" rel="noopener">
+            <svg class="ic"><use href="#i-linkedin"></use></svg> LinkedIn
+          </a>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- ABOUT -->
-  <section id="about" class="about-art">
+  <section id="about" data-reveal>
     <div class="container">
       <div class="about-card">
         <div class="about-accent"></div>
 
         <h2 class="about-title">
-          <span class="spark">⚡</span>
-          ABOUT
+          <span class="spark"><svg class="ic"><use href="#i-bolt"></use></svg></span>
+          About
         </h2>
 
         <p class="about-lead">
@@ -72,7 +144,7 @@
         </p>
 
         <p class="about-body">
-          I’ve contributed to <strong>Ultra High‑Speed PMSM</strong> drive projects—designing, tuning, and validating
+          I've contributed to <strong>Ultra High‑Speed PMSM</strong> drive projects—designing, tuning, and validating
           strategies like <strong>Field‑Oriented Control (FOC)</strong>, <strong>Direct Torque Control (DTC)</strong>,
           and emerging <strong>MIMO‑based control</strong>. My work spans modeling to implementation, targeting
           <em>high bandwidth</em>, <em>low torque ripple</em>, and <em>stable operation under extreme dynamics</em>.
@@ -124,233 +196,259 @@
     </div>
   </section>
 
-  <!-- EXPERIENCE -->
-<section id="experience">
-  <div class="container">
-    <h2>Experience</h2>
+  <section id="experience" data-reveal>
+    <div class="container">
+      <h2>Experience</h2>
+      <div class="exp-list">
 
-    <!-- Use a single-column list of full-width experience items -->
-    <div class="exp-list">
-
-      <!-- Cummins Inc -->
-      <article class="exp-item">
-        <!-- Full-width head (banner + caption) -->
-        <figure class="exp-head">
-          <img
-            src="assets/Cummins - Fridley Plant.jpg"
-            alt="Cummins Power Generation plant in Fridley, MN"
-            loading="lazy"
-            width="1200" height="250"
-
-          />
-          <figcaption class="exp-caption">
-            <strong class="exp-role">Cummins Inc — Power Electronics Control &amp; System Integration (Intern)</strong>
-            <span class="meta">Fridley, MN • May 2025 – Aug 2025</span>
-            <span class="blurb">
-              Ultra high‑speed PMSM drive controls (FOC/DTC), SIL/HIL evaluation, TI LaunchPad + FPGA
-              integration for drive &amp; DC‑DC systems.
-            </span>
-          </figcaption>
-        </figure>
-
-        <!-- Sub-projects / gallery inside the item -->
- <div class="cards">
-        <!-- typhoon-->
-        <div class="card project-card">
-          <figure class="project-figure">
-            <img src="assets/pic1.jpg" alt="pmsm" loading="lazy" >
-          </figure>
-          <h3>PMSM drive controls (FOC) HIL testing using Typhoon Real‑Time &amp; TI LaunchPad</h3>
-          <p>
-           PMSM drive controls (FOC) HIL testing using Typhoon Real‑Time &amp; TI LaunchPad
+        <article class="exp-card">
+          <div class="exp-header">
+            <span class="exp-icon"><svg class="ic"><use href="#i-briefcase"></use></svg></span>
+            <div class="exp-title-block">
+              <h3>Cummins Inc — Power Electronics Control &amp; System Integration (Intern)</h3>
+              <div class="exp-meta">
+                <span><svg class="ic"><use href="#i-pin"></use></svg> Fridley, MN</span>
+                <span><svg class="ic"><use href="#i-calendar"></use></svg> May 2025 – Aug 2025</span>
+              </div>
+            </div>
+          </div>
+          <p class="exp-desc">
+            Ultra high‑speed PMSM drive controls (FOC/DTC), SIL/HIL evaluation, TI LaunchPad + FPGA integration for drive &amp; DC‑DC systems.
           </p>
-        </div>
+          <div class="exp-image-grid">
+            <figure class="exp-image-wrapper">
+              <img src="assets/pic1.jpg" alt="PMSM drive controls FOC HIL testing" class="lightbox-trigger" loading="lazy" />
+              <figcaption>FOC HIL testing via Typhoon RT &amp; TI LaunchPad</figcaption>
+            </figure>
+            <figure class="exp-image-wrapper">
+              <img src="assets/pic2.jpg" alt="PMSM drive controls FOC HIL testing" class="lightbox-trigger" loading="lazy" />
+              <figcaption>FOC HIL testing via Speedgoat RT</figcaption>
+            </figure>
+          </div>
+        </article>
 
-   <!-- speedgoat-->
-        <div class="card project-card">
-          <figure class="project-figure">
-            <img src="assets/pic2.jpg" alt="pmsm" loading="lazy" >
-          </figure>
-          <h3>PMSM drive controls (FOC) HIL testing with Speedgoat RT</h3>
-          <p>
-           PMSM drive controls (FOC) HIL testing using Speedgoat Real‑Time
+        <article class="exp-card">
+          <div class="exp-header">
+            <span class="exp-icon"><svg class="ic"><use href="#i-cap"></use></svg></span>
+            <div class="exp-title-block">
+              <h3>Mississippi State University — Graduate Teaching Assistant</h3>
+              <div class="exp-meta">
+                <span><svg class="ic"><use href="#i-pin"></use></svg> Starkville, MS</span>
+                <span><svg class="ic"><use href="#i-calendar"></use></svg> Jan 2022 – Present</span>
+              </div>
+            </div>
+          </div>
+          <p class="exp-desc">
+            Developing, optimizing, and validating high‑performance motor drive control frameworks and executing real‑time HIL simulations for advanced compressor systems.
           </p>
-        </div>
+          <div class="exp-image-grid">
+            <figure class="exp-image-wrapper">
+              <img src="assets/Setup_RTBox with HIL.jpg" alt="RT-Box HIL setup" class="lightbox-trigger" loading="lazy" />
+              <figcaption>Optimized PFC HIL testing using RT‑Box</figcaption>
+            </figure>
+            <figure class="exp-image-wrapper">
+              <img src="assets/pic4.jpg" alt="Hardware test for high-speed compressor" class="lightbox-trigger" loading="lazy" />
+              <figcaption>Hardware Test for High‑Speed Compressor</figcaption>
+            </figure>
+          </div>
+        </article>
 
-        
+        <article class="exp-card">
+          <div class="exp-header">
+            <span class="exp-icon"><svg class="ic"><use href="#i-cap"></use></svg></span>
+            <div class="exp-title-block">
+              <h3>Advanced College of Engineering &amp; Management — Assistant Lecturer</h3>
+              <div class="exp-meta">
+                <span><svg class="ic"><use href="#i-pin"></use></svg> Kathmandu, Nepal</span>
+                <span><svg class="ic"><use href="#i-calendar"></use></svg> Apr 2022 – Dec 2022</span>
+              </div>
+            </div>
+          </div>
+          <p class="exp-desc">
+            Delivered academic instruction on power systems analysis, electrical machines, and transmission network dynamics while advising undergraduate laboratory designs.
+          </p>
+          <!-- Grid is 2-column — add a second figure here later for consistency -->
+          <div class="exp-image-grid">
+            <figure class="exp-image-wrapper">
+              <img src="assets/Loadflow.jpg" alt="Load Flow Analysis Data" class="lightbox-trigger" loading="lazy" />
+              <figcaption>Load Flow Analysis Data</figcaption>
+            </figure>
+          </div>
+        </article>
 
-      <!-- Mississippi State University -->
-      <article class="exp-item">
-        <figure class="exp-head">
-          <img
-            src="assets/msunv.jpg"
-            alt="Mississippi State University - campus"
-            loading="lazy"
-            width="2400" height="1360"
-          />
-          <figcaption class="exp-caption">
-            <strong class="exp-role">Mississippi State University — Graduate Teaching Assistant</strong>
-            <span class="meta">Starkville, MS • Jan 2022 – Present</span>
-          </figcaption>
-        </figure>
+        <article class="exp-card">
+          <div class="exp-header">
+            <span class="exp-icon"><svg class="ic"><use href="#i-briefcase"></use></svg></span>
+            <div class="exp-title-block">
+              <h3>Prism International – DLRMP — Project Engineer</h3>
+              <div class="exp-meta">
+                <span><svg class="ic"><use href="#i-pin"></use></svg> Lalitpur, Nepal</span>
+                <span><svg class="ic"><use href="#i-calendar"></use></svg> Jan 2019 – Apr 2021</span>
+              </div>
+            </div>
+          </div>
+          <p class="exp-desc">
+            Analyzed regional electricity distribution networks, evaluating line losses and load parameters to enhance grid infrastructure planning.
+          </p>
+          <!-- Grid is 2-column — add a second figure here later for consistency -->
+          <div class="exp-image-grid">
+            <figure class="exp-image-wrapper">
+              <img src="assets/Loss_data.jpg" alt="NEA distribution loss data" class="lightbox-trigger" loading="lazy" />
+              <figcaption>Loss Data for Nepal by District (NEA)</figcaption>
+            </figure>
+          </div>
+        </article>
 
-        <div class="exp-gallery">
-          <figure class="exp-tile">
-            <img src="assets/Setup_RTBox with HIL.jpg"
-                 alt="RT-Box HIL setup for PFC optimization"
-                 loading="lazy" width="1600" height="900" />
-            <figcaption>Optimized PFC HIL testing using RT‑Box</figcaption>
-          </figure>
-
-          <figure class="exp-tile">
-            <img src="assets/pic4.jpg"
-                 alt="Hardware test for high-speed compressor PMSM drive"
-                 loading="lazy" width="1600" height="900" />
-            <figcaption>Hardware Test for High‑Speed Compressor</figcaption>
-          </figure>
-        </div>
-      </article>
-
-      <!-- Advanced College of Engineering & Management -->
-      <article class="exp-item">
-        <figure class="exp-head">
-          <img
-            src="assets/adv.jpg"
-            alt="Advanced College of Engineering and Management, Nepal"
-            loading="lazy"
-            width="2400" height="1360"
-          />
-          <figcaption class="exp-caption">
-            <strong class="exp-role">Advanced College of Engineering &amp; Management — Assistant Lecturer</strong>
-            <span class="meta">Kathmandu, Nepal • Apr 2022 – Dec 2022</span>
-          </figcaption>
-        </figure>
-
-        <div class="exp-gallery">
-          <figure class="exp-tile">
-            <img src="assets/Loadflow.jpg"
-                 alt="NEA distribution loss data by district"
-                 loading="lazy" width="1600" height="900" />
-            <figcaption>Loss Data for Nepal by District (NEA)</figcaption>
-          </figure>
-        </div>
-      </article>
-
-      <!-- Prism International – DLRMP -->
-      <article class="exp-item">
-        <header class="exp-plain">
-          <h3 class="exp-role">Prism International – DLRMP — Project Engineer</h3>
-          <div class="meta">Lalitpur, Nepal • Jan 2019 – Apr 2021</div>
-        </header>
-        <div class="exp-gallery">
-          <figure class="exp-tile">
-            <img src="assets/Loss_data.jpg"
-                 alt="NEA distribution loss data by district"
-                 loading="lazy" width="1600" height="900" />
-            <figcaption>Loss Data for Nepal by District (NEA)</figcaption>
-          </figure>
-        </div>
-      </article>
-
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-  <!-- PROJECTS -->
-  <section id="projects">
+  <section id="projects" data-reveal>
     <div class="container">
       <h2>Selected Projects</h2>
-
       <div class="cards">
-        <!-- PV‑STATCOM -->
         <div class="card project-card">
           <figure class="project-figure">
-            <img src="assets/pv-statcom.jpg" alt="PV‑STATCOM simulation and control" loading="lazy">
+            <img src="assets/pv-statcom.jpg" class="lightbox-trigger" alt="PV‑STATCOM simulation and control" loading="lazy" />
           </figure>
           <h3>PV‑STATCOM</h3>
-          <p>
-            Enabled a PV inverter to provide active/reactive power based on irradiance to improve utilization.
-            Tools: MATLAB/Simulink, PSIM.
-          </p>
+          <p>Enabled a PV inverter to provide active/reactive power based on irradiance to improve utilization. Tools: MATLAB/Simulink, PSIM.</p>
         </div>
-
-        <!-- Controlled Rectifier Studies -->
         <div class="card project-card">
           <figure class="project-figure">
-            <img src="assets/controlled-rectifier.jpg" alt="Controlled rectifier analysis - GTO vs Thyristor" loading="lazy">
+            <img src="assets/controlled-rectifier.jpg" class="lightbox-trigger" alt="Controlled rectifier analysis" loading="lazy" />
           </figure>
           <h3>Controlled Rectifier Studies</h3>
-          <p>
-            Compared harmonic performance and power factor of GTO vs. Thyristor rectifiers for isolated micro‑grid loads.
-          </p>
+          <p>Compared harmonic performance and power factor of GTO vs. Thyristor rectifiers for isolated micro‑grid loads.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- PUBLICATIONS -->
-  <section id="publications">
+  <section id="publications" data-reveal>
     <div class="container">
       <h2>Publications</h2>
-      <ul class="clean">
-        <li>
-          K. Joshi, S. Bimali, P. Karki, T. Aryal, I. Tamrakar.
-          “Implementation of PV‑Solar Inverter STATCOM in Grid Connected System (PV‑STATCOM).”
-          Journal of the IOE, 2019.
-          <a href="https://www.researchgate.net/publication/346900646_Implementation_of_Solar-PV_Inverter_as_STATCOM_during_Nighttime_in_Grid-Connected_System_PV-STATCOM" target="_blank" rel="noopener">Link</a>
-        </li>
-        <li>
-          K. Thapa, A. Maharjan, K. Kaphle, K. Joshi, M. Rauniyar, T. Aryal.
-          “Modeling of Wind–Solar Hybrid Systems for Off‑Grid in Nepal and A Case Study.”
-          Journal of the IOE, 2019.
-          <a href="https://www.researchgate.net/publication/347252886_Paper_Modeling_of_Wind-Solar_Hybrid_Power_System_for_Off-Grid_in_Nepal_and_a_Case_Study" target="_blank" rel="noopener">Link</a>
-        </li>
-        <li>
-          Md Moniruzzaman, K. Joshi, Md R. Rahman, Md K. Islam, S. Choi, M. K. Ghartemani.
-          “Implementation and Analysis of Direct Torque Control on High‑Speed PMSMs: A Comparative Study of Commercial and Laboratory‑Developed Motors.”
-          APEC 2025.
-          <a href="https://doi.org/10.1109/APEC48143.2025.10977544" target="_blank" rel="noopener">DOI</a>
-        </li>
-      </ul>
-    </div>
-  </section>
+      <div class="pub-container">
+        
+        <article class="pub-row">
+          <div class="pub-main">
+            <h3 class="pub-paper-title">Implementation of PV‑Solar Inverter STATCOM in Grid Connected System (PV‑STATCOM)</h3>
+            <p class="pub-author-list">K. Joshi, S. Bimali, P. Karki, T. Aryal, I. Tamrakar</p>
+            <div class="pub-journal">Journal of the IOE, 2019</div>
+          </div>
+          <div class="pub-action">
+            <a class="btn-pub" href="https://www.researchgate.net/publication/346900646_Implementation_of_Solar-PV_Inverter_as_STATCOM_during_Nighttime_in_Grid-Connected_System_PV-STATCOM" target="_blank" rel="noopener">
+              <span>View Paper</span> <svg class="ic"><use href="#i-external"></use></svg>
+            </a>
+          </div>
+        </article>
 
-  <!-- EDUCATION -->
-  <section id="education">
-    <div class="container">
-      <h2>Education</h2>
-      <div class="cards">
-        <div class="card">
-          <h3>Ph.D., Electrical &amp; Computer Engineering</h3>
-          <div class="meta">Mississippi State University • 2023 – Present</div>
-          <p>GPA: 4.0 • Expected Graduation: Dec 2027. Coursework includes Power Electronics, Feedback Control I/II,
-            Non‑linear/Optimal Control, Power Systems (analysis, stability, optimization), High‑Frequency Power Electronics.</p>
-        </div>
-        <div class="card">
-          <h3>Bachelor’s in Electrical Engineering</h3>
-          <div class="meta">IOE Pulchowk Campus, Tribhuvan University • 2014 – 2018</div>
-          <p>Thesis: “Implementation of PV‑Solar Inverter STATCOM in Grid Connected System (PV‑STATCOM).”</p>
-        </div>
+        <article class="pub-row">
+          <div class="pub-main">
+            <h3 class="pub-paper-title">Modeling of Wind–Solar Hybrid Systems for Off‑Grid in Nepal and A Case Study</h3>
+            <p class="pub-author-list">K. Thapa, A. Maharjan, K. Kaphle, K. Joshi, M. Rauniyar, T. Aryal</p>
+            <div class="pub-journal">Journal of the IOE, 2019</div>
+          </div>
+          <div class="pub-action">
+            <a class="btn-pub" href="https://www.researchgate.net/publication/347252886_Paper_Modeling_of_Wind-Solar_Hybrid_Power_System_for_Off-Grid_in_Nepal_and_a_Case_Study" target="_blank" rel="noopener">
+              <span>View Paper</span> <svg class="ic"><use href="#i-external"></use></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="pub-row">
+          <div class="pub-main">
+            <h3 class="pub-paper-title">Implementation and Analysis of Direct Torque Control on High‑Speed PMSMs: A Comparative Study of Commercial and Laboratory‑Developed Motors</h3>
+            <p class="pub-author-list">Md Moniruzzaman, K. Joshi, Md R. Rahman, Md K. Islam, S. Choi, M. K. Ghartemani</p>
+            <div class="pub-journal">IEEE APEC 2025</div>
+          </div>
+          <div class="pub-action">
+            <a class="btn-pub" href="https://doi.org/10.1109/APEC48143.2025.10977544" target="_blank" rel="noopener">
+              <span>View DOI</span> <svg class="ic"><use href="#i-external"></use></svg>
+            </a>
+          </div>
+        </article>
+
       </div>
     </div>
   </section>
 
-  <!-- CONTACT -->
-  <section id="contact">
+  <section id="education" data-reveal>
+    <div class="container">
+      <h2>Education</h2>
+      <div class="edu-timeline">
+        
+        <div class="edu-block">
+          <div class="edu-marker"></div>
+          <div class="edu-content">
+            <div class="edu-header">
+              <h3 class="edu-degree">Ph.D. in Electrical &amp; Computer Engineering</h3>
+              <span class="edu-gpa">GPA: 4.0</span>
+            </div>
+            <div class="edu-institution">Mississippi State University</div>
+            <div class="edu-date">2023 – Present | Expected Graduation: Dec 2027</div>
+            <p class="edu-details">
+              Advanced specialization in Power Electronics, Feedback Control I &amp; II, Non-linear/Optimal Control, Power Systems Analysis, Stability &amp; Optimization, and High-Frequency Power Electronics Conversion frameworks.
+            </p>
+          </div>
+        </div>
+
+        <div class="edu-block">
+          <div class="edu-marker"></div>
+          <div class="edu-content">
+            <div class="edu-header">
+              <h3 class="edu-degree">Bachelor's Degree in Electrical Engineering</h3>
+              <span class="edu-gpa">Distinction</span>
+            </div>
+            <div class="edu-institution">IOE Pulchowk Campus, Tribhuvan University</div>
+            <div class="edu-date">2014 – 2018</div>
+            <p class="edu-details">
+              Undergraduate Thesis: <em>"Implementation of PV‑Solar Inverter STATCOM in Grid Connected System (PV‑STATCOM)"</em>. Focused on grid synchronization, harmonic mitigation, and local voltage profile adjustments.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" data-reveal>
     <div class="container">
       <h2>Contact</h2>
-      <p>Email: <a href="mailto:kj1377@msstate.edu">kj1377@msstate.edu</a></p>
-      <p>LinkedIn: <a href="https://www.linkedin.com/in/kishor-joshi-509b46186" target="_blank" rel="noopener">linkedin.com/in/kishor-joshi-509b46186</a></p>
-      <p>GitHub: <a href="https://github.com/joshiK319" target="_blank" rel="noopener">github.com/joshiK319</a></p>
+      <div class="contact-list">
+        <a class="contact-item" href="mailto:kj1377@msstate.edu">
+          <svg class="ic"><use href="#i-mail"></use></svg>
+          <span>kj1377@msstate.edu</span>
+        </a>
+        <a class="contact-item" href="https://www.linkedin.com/in/kishor-joshi-509b46186" target="_blank" rel="noopener">
+          <svg class="ic"><use href="#i-linkedin"></use></svg>
+          <span>linkedin.com/in/kishor-joshi-509b46186</span>
+        </a>
+        <a class="contact-item" href="https://github.com/joshiK319" target="_blank" rel="noopener">
+          <svg class="ic"><use href="#i-github"></use></svg>
+          <span>github.com/joshiK319</span>
+        </a>
+      </div>
     </div>
   </section>
 
   <footer>
-    <div class="container">© {year} Kishor Joshi</div>
+    <div class="container">© <span id="year"></span> Kishor Joshi</div>
   </footer>
 
-  <script>
-    document.querySelector('footer .container').innerHTML = `© ${new Date().getFullYear()} Kishor Joshi`;
-  </script>
+  <button class="to-top" id="toTop" aria-label="Back to top">
+    <svg class="ic"><use href="#i-arrow-up"></use></svg>
+  </button>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="Image preview">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close preview">
+      <svg class="ic"><use href="#i-close"></use></svg>
+    </button>
+    <figure class="lightbox-figure">
+      <img id="lightboxImg" src="" alt="" />
+      <figcaption id="lightboxCaption"></figcaption>
+    </figure>
+  </div>
+
 </body>
 </html>
