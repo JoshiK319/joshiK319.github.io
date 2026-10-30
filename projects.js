@@ -23,12 +23,15 @@
                 'dtc' | 'pwm' | 'pfc' | 'grid'
    sample       true = shows a note that the page still has sample material
    confidential true = shows a confidentiality note
-   problem      "Problem & motivation" paragraphs (array of strings)
+   unpublished  true = marks the card Confidential because the paper is not yet published
+   problem      "Problem and motivation" paragraphs (array of strings)
    overview     paragraphs (array of strings)
    specs        key numbers: [{ value: '450 V', label: 'DC bus' }]
    team         who the work was done with (string)
    role         what Kishor personally did (string)
    system, approach, results   bullet lists (arrays of strings)
+   next         "Next steps" bullet list (array of strings)
+   advantages   "Why process the rectified signal directly" bullet list (array of strings)
    tools        list of tools
    documents    [{ title: 'Technical summary', type: 'PDF', url: 'assets/docs/...' }]
    links        [{ label: 'Paper (DOI)', url: 'https://...' }]
@@ -40,44 +43,51 @@ const PROJECTS = [
     tag: 'Mississippi State',
     period: 'Ph.D. research · 2023 – present',
     title: 'Ultra-High-Speed PMSM Drive Development',
-    summary: 'Delay-aware multivariable control for a GaN-based PMSM drive designed for 100,000 rpm, run to 95,000 rpm on hardware.',
-    sample: true,
+    summary: 'A multivariable current controller that builds the digital delay into the model. On a GaN-based PMSM drive it lifted the maximum stable speed from 33 krpm to 95 krpm, a 187.9% improvement over conventional control.',
     images: [
-      { src: 'assets/projects/ultra-high-speed/hil-setup.svg', caption: 'HIL setup: PLECS RT Box, TI C2000 LaunchPad running the control firmware, and the model on screen.' },
-      { src: 'assets/projects/ultra-high-speed/speed-ramp.svg', caption: 'Acceleration toward the 100,000 rpm design speed; 95,000 rpm reached on hardware.' },
-      { src: 'assets/projects/ultra-high-speed/architecture.svg', caption: 'Drive system: GaN inverter, Maxon PMSM with Hall sensors, TI C2000 F28379D controller.' }
-    ],
-    documents: [
-      { title: 'Technical summary', type: 'PDF', url: 'assets/docs/ultra-high-speed-pmsm-summary.pdf' },
-      { title: 'Presentation slides', type: 'PDF', url: 'assets/docs/ultra-high-speed-pmsm-slides.pdf' }
+      { src: 'assets/projects/ultra-high-speed/drive-hardware.jpg', caption: 'Experimental drive: TI F28379D LaunchPad with a BOOSTXL-3PhGaN inverter, Hall-sensor interface circuit, PMSM motor, DC and 3-phase supplies, and a current probe.' },
+      { src: 'assets/projects/ultra-high-speed/hil-setup.jpg', caption: 'Real-time validation setup: PLECS RT Box running the drive model, TI C2000 LaunchPad running the control firmware, and an oscilloscope.' },
+      { src: 'assets/projects/ultra-high-speed/experiment-siso-padc.jpg', caption: 'Experiment, with the speed ramped up until the drive goes unstable: decoupled-SISO control fails at 33 krpm, and adding phase-advance delay compensation (PADC) moves that to 43 krpm. Panels: (a) speed, (b) phase and q-axis current, (c) control voltage Vq.' },
+      { src: 'assets/projects/ultra-high-speed/experiment-mimo.jpg', caption: 'Experiment, same test: MIMO control reaches 51 krpm before instability. With the delay modeled, the drive keeps running until the control voltage saturates at 95 krpm.' },
+      { src: 'assets/projects/ultra-high-speed/pole-selection.jpg', caption: 'Speed-loop design by pole selection, for the PI and P-I controllers. The shaded region holds the closed-loop poles that meet the limits, and the green check marks the selected pole. Design 1: fluctuation and overshoot ≤ 17%, peak time 0.04–0.06 s. Design 2: fluctuation ≤ 17%, damping 0.7–0.85, peak time 0.04–0.06 s. Click the picture to open it full size.' },
+      { src: 'assets/projects/ultra-high-speed/heatmaps-design1.jpg', caption: 'Design 1: overshoot, fluctuation, settling time and rise time across the allowed pole region, for PI and P-I. Selected gains: Kp = 0.0028 and Ki = 0.062 (PI); Kp = 0.0043 and Ki = 0.369 (P-I).' },
+      { src: 'assets/projects/ultra-high-speed/heatmaps-design2.jpg', caption: 'Design 2: the same four metrics over the pole region set by the damping limits. Selected gains: Kp = 0.0023 and Ki = 0.0589 (PI); Kp = 0.0045 and Ki = 0.2356 (P-I).' }
     ],
     problem: [
-      'At 100,000 rpm the motor\'s electrical frequency is in the kilohertz range, and the controller gets only a few samples per electrical cycle. Computation and PWM delays then become a significant fraction of the cycle and couple the d- and q-axis currents. Conventional PI current control loses stability margin exactly where the drive needs it most.',
-      'Ultra-high-speed motors make compressors and turbomachinery smaller and lighter, but only if the drive stays stable and responsive at full speed.'
+      'High-speed permanent magnet synchronous motors (PMSMs) are increasingly used in turbochargers, compressors and spindle motors because of their high power density and efficiency. As speed goes up, the inverter switches only a few times per electrical cycle (a low ratio of switching to fundamental frequency), and two linked problems get worse: digital control delay and cross-coupling between the d- and q-axis current loops.',
+      'Left uncompensated, these effects degrade current regulation, narrow the stability margin and cap the speed the drive can reach. Conventional approaches handle them in separate stages, using feedforward or phase-advance delay compensation plus a decoupling network.'
     ],
     overview: [
-      'This project builds a complete ultra-high-speed PMSM drive and develops multivariable (MIMO) control that accounts for delay, so the drive stays stable and responsive at very high speed.',
-      'The drive uses a GaN-based inverter feeding a Maxon motor with Hall-sensor feedback, controlled by FOC-based strategies on a TI C2000 (F28379D) LaunchPad. Control is designed in MATLAB, validated in real time on a PLECS RT Box FPGA model, and then deployed as embedded code.'
+      'This research proposes a multivariable (MIMO) current control framework that treats delay and cross-coupling together. The delay model is built directly into the state-space representation of the system and compensated inside the feedback path, while the multivariable structure accounts for d-q axis coupling on its own, with no separate decoupling network.',
+      'The controller is validated in simulation and on a TI F28379D-based PMSM drive platform switching at 40 kHz. The drive uses a GaN inverter feeding a Maxon motor with Hall-sensor feedback. Control is designed in MATLAB, validated in real time on a PLECS RT Box FPGA model, and then deployed as embedded code.'
     ],
     specs: [
-      { value: '100,000 rpm', label: 'Design speed' },
-      { value: '95,000 rpm', label: 'Reached on hardware' },
-      { value: '+188%', label: 'Speed margin (MIMO control)' },
-      { value: 'GaN', label: 'Inverter technology' }
+      { value: '95 krpm', label: 'Maximum stable speed (proposed controller)' },
+      { value: '+187.9%', label: 'Over the 33 krpm decoupled-SISO baseline' },
+      { value: '40 kHz', label: 'Switching frequency' },
+      { value: '100 krpm', label: 'Design speed' }
     ],
     team: 'Research with M. Karimi-Ghartemani and S. Choi at Mississippi State University, co-authors on the related publications.',
     role: 'Designs the control strategies, including delay-aware MIMO current control, builds the drive system, runs HIL validation on PLECS RT Box, and implements the algorithms as embedded code in Code Composer Studio.',
-    system: ['GaN-based inverter', 'Maxon PMSM with Hall-sensor feedback', 'TI C2000 F28379D LaunchPad controller', 'PLECS RT Box for real-time HIL'],
+    system: ['GaN-based inverter (BOOSTXL-3PhGaN)', 'Maxon PMSM with Hall-sensor feedback', 'TI C2000 F28379D LaunchPad controller', 'PLECS RT Box for real-time HIL'],
     approach: [
       'Designed FOC-based control strategies for operation up to 100,000 rpm',
-      'Developed and analyzed MIMO control techniques that mitigate delay effects and improve high-speed stability and dynamic performance',
+      'Put the digital delay into the state-space model and designed a delay-integrated MIMO current controller that handles d-q coupling without a decoupling network',
+      'Compared four controllers on the same platform: decoupled-SISO, SISO with phase-advance delay compensation (PADC), MIMO, and the proposed delay-integrated MIMO',
+      'Designed the speed-loop PI and P-I controllers by choosing closed-loop poles inside a region set by overshoot, fluctuation, damping and peak-time limits, and compared the candidates with heat maps of overshoot, fluctuation, settling time and rise time',
       'Validated state-of-the-art and proposed methods in real time on a PLECS RT Box FPGA model',
       'Implemented the algorithms as embedded code on the microcontroller and moved from simulation to physical hardware'
     ],
     results: [
-      'Delay-aware MIMO control improved the speed margin by 188%',
-      'Reached a maximum speed of 95,000 rpm on hardware',
+      'Maximum stable speed rose from 33 krpm (decoupled-SISO) to 43 krpm (with PADC), 51 krpm (MIMO) and 95 krpm (proposed delay-integrated MIMO)',
+      'A 187.9% improvement over the conventional baseline, with 95,000 rpm reached on hardware',
+      'With the delay modeled, the drive no longer goes unstable: it runs until the control voltage saturates at 95 krpm',
       'Robust multivariable current control approach submitted to IEEE Transactions on Industrial Electronics (under review)'
+    ],
+    next: [
+      'Studying how output LC filters affect closed-loop stability: they improve current waveform quality, but the added filter pole shifts the system poles and narrows the stability margin of the proposed controller',
+      'Addressing that trade-off directly within the multivariable design framework',
+      'Extending the approach toward sensorless operation and higher operating speeds'
     ],
     tools: ['MATLAB/Simulink', 'PLECS', 'RT Box', 'TI C2000 F28379D', 'Code Composer Studio', 'GaN inverter'],
     links: [{ label: 'SSCET 2026 paper — PI speed controllers (DOI)', url: 'https://doi.org/10.1109/SSCET69323.2026.11735668' }]
@@ -89,16 +99,10 @@ const PROJECTS = [
     period: 'Ph.D. research',
     title: 'High-Speed PMSM Control Drives',
     summary: 'A Direct Torque Control drive for a fuel-cell compressor motor on a 200 kW, 450 V inverter, validated on hardware to 60,000 rpm.',
-    sample: true,
     images: [
-      { src: 'assets/projects/high-speed-pmsm/test-bench.svg', caption: 'Motor test bench: inverter, high-speed PMSM coupled to a load, active cooling, and oscilloscope.' },
-      { src: 'assets/projects/high-speed-pmsm/speed-response.svg', caption: 'Start-up with the open-loop to closed-loop transition, up to 60,000 rpm.' },
-      { src: 'assets/projects/high-speed-pmsm/dtc-structure.svg', caption: 'DTC structure: hysteresis torque and flux control with a switching table.' },
-      { src: 'assets/projects/high-speed-pmsm/torque-ripple.svg', caption: 'Steady-state torque of the commercial and lab-developed motors.' }
-    ],
-    documents: [
-      { title: 'Technical summary', type: 'PDF', url: 'assets/docs/high-speed-pmsm-summary.pdf' },
-      { title: 'Presentation slides', type: 'PDF', url: 'assets/docs/high-speed-pmsm-slides.pdf' }
+      { src: 'assets/projects/high-speed-pmsm/test-setup.jpg', caption: 'Test setup: top view of the lab with the chiller, inverter and current probes; the inverter set-up with its LaunchPad controller; and the metal containment safe box around the PMSM, with air inlet and outlet, coolant lines, camera and the 3-phase line.' },
+      { src: 'assets/projects/high-speed-pmsm/startup-30krpm.jpg', caption: 'Start-up and speed steps up to 30,000 rpm. The drive runs open loop for the 0–500 rpm phase, then closed loop from 501 rpm, with zoomed views of the transition (Zoom-1 and Zoom-2).' },
+      { src: 'assets/projects/high-speed-pmsm/response-50krpm.jpg', caption: 'Speed steps up to 50 krpm at a 5,000 rpm/s ramp rate, and the matching phase currents. The current fluctuates at 50 krpm (80 A peak); the figure lists probable reasons.' }
     ],
     problem: [
       'Fuel-cell systems use high-speed compressors to supply air, and the motors that drive them must start reliably and hold speed under changing load. At standstill there is no reliable flux or position information, so a high-speed DTC drive needs a safe way to start before closed-loop control can take over.',
@@ -134,43 +138,49 @@ const PROJECTS = [
   {
     id: 'power-factor-correction',
     category: 'power-electronics',
+    unpublished: true,
     tag: 'Mississippi State',
     period: 'Ph.D. research',
     title: 'Power Factor Correction',
-    summary: 'ePLL-based power factor correction control with a regulated 400 V DC output, validated in real-time HIL.',
-    sample: true,
+    summary: 'A phase-locked loop that tracks a rectified ac signal directly, and a boost PFC controller built on it, validated in simulation and in real-time HIL with a regulated 400 V DC output.',
     images: [
-      { src: 'assets/projects/pfc/pfc-board.svg', caption: 'PFC board: AC input, bridge, boost inductor, switches on the heatsink, and the 400 V DC output.' },
-      { src: 'assets/projects/pfc/input-waveforms.svg', caption: 'Grid voltage and input current in phase, from HIL.' },
-      { src: 'assets/projects/pfc/control-loops.svg', caption: 'Control structure: voltage loop, ePLL and current loop.' },
-      { src: 'assets/projects/pfc/harmonics.svg', caption: 'Input current harmonics with and without PFC.' }
-    ],
-    documents: [
-      { title: 'Technical summary', type: 'PDF', url: 'assets/docs/power-factor-correction-summary.pdf' },
-      { title: 'Presentation slides', type: 'PDF', url: 'assets/docs/power-factor-correction-slides.pdf' }
+      { src: 'assets/projects/pfc/boost-pfc-circuit.png', caption: 'Boost PFC converter: ac source, diode bridge, boost inductor L, switch Q, diode D, output capacitor Co and load, with the PFC controller driving Q.' },
+      { src: 'assets/projects/pfc/hil-setup.jpg', caption: 'Real-time validation setup: PLECS RT Box running the converter model, TI C2000 LaunchPad running the controller, an oscilloscope and the host computer.' },
+      { src: 'assets/projects/pfc/scope-1.png', caption: 'Oscilloscope capture: input voltage (blue, 200 V/div), input current (magenta, 10 A/div) and output voltage (gold, 50 V/div) as the load steps up. The input current rises in steps with the load.' },
+      { src: 'assets/projects/pfc/scope-2.png', caption: 'Oscilloscope capture of the same load-step test, run again, with the output voltage showing a slightly different transient.' },
+      { src: 'assets/projects/pfc/scope-3.png', caption: 'Oscilloscope capture of the same load-step test, one more run.' },
+      { src: 'assets/projects/pfc/scope-4.png', caption: 'Longer oscilloscope capture: the input current steps up and then back down while the output voltage sags and recovers.' }
     ],
     problem: [
       'A plain diode rectifier draws current in short, distorted pulses. That gives a poor power factor and high harmonic content, wastes distribution capacity and can break grid harmonic limits such as IEC 61000-3-2.',
-      'A PFC stage shapes the input current to follow the grid voltage, but only if its control stays accurately synchronized to the grid and keeps the DC output stable as conditions change.'
+      'A PFC stage shapes the input current to follow the grid voltage, but only if its control stays accurately synchronized to the grid and keeps the DC output stable as conditions change.',
+      'Rectified ac signals also appear in many other applications, such as rectifier and inverter systems. Existing methods usually unfold the rectified signal or treat it as a double-frequency signal, and that means sensing the actual ac voltage and conditioning it for the A/D converter and DSP.'
     ],
     overview: [
-      'This project develops a PFC control strategy in MATLAB/Simulink. An enhanced phase-locked loop (ePLL) provides accurate grid synchronization, an outer loop regulates the DC output at 400 V, and an inner loop shapes the input current to raise the power factor and reduce harmonics. It was validated in real time on PLECS RT Box.'
+      'This project proposes an enhanced phase-locked loop for rectified signals (R-ePLL), which processes a rectified ac signal directly, without unfolding it or treating it as a double-frequency signal.',
+      'Built on the R-ePLL, a new controller for a boost PFC (B-PFC) converter combines a nonlinear term derived from the R-ePLL with two simple proportional feedback loops, so the converter performs robustly. The theory and analysis are backed by MATLAB/Simulink simulations and real-time HIL validation on a PLECS RT Box.'
     ],
     specs: [
       { value: '400 V', label: 'Regulated DC output' },
-      { value: 'ePLL', label: 'Grid synchronization' },
-      { value: '[[0.99]]', label: 'Power factor' },
-      { value: '[[3.2]]%', label: 'Input current THD' }
+      { value: 'R-ePLL', label: 'Reads the rectified signal directly' },
+      { value: 'Boost', label: 'PFC converter topology' },
+      { value: '2', label: 'Simple proportional feedback loops' }
     ],
-    role: 'Developed the PFC control strategy and the ePLL, designed the control architecture, and ran the real-time HIL validation.',
+    role: 'Developed the PFC control strategy and the R-ePLL, designed the control architecture, and ran the real-time HIL validation.',
     approach: [
-      'Developed the PFC control strategy in MATLAB/Simulink with an ePLL for accurate grid synchronization',
-      'Designed the control architecture to regulate the DC output at 400 V while improving power factor and reducing input current harmonics',
-      'Performed real-time HIL validation on PLECS RT Box for rapid prototyping and verification',
-      'Tested the control under dynamic operating conditions'
+      'Developed the rectified ePLL (R-ePLL) to synchronize directly to the rectified grid voltage',
+      'Designed a boost PFC controller that combines a nonlinear R-ePLL term with two proportional feedback loops, regulating the DC output at 400 V while improving power factor and reducing input current harmonics',
+      'Analyzed the R-ePLL and the controller theoretically and simulated them in MATLAB/Simulink',
+      'Performed real-time HIL validation on PLECS RT Box for rapid prototyping and verification, and tested the control under dynamic operating conditions'
     ],
-    results: ['DC output regulated at 400 V', 'Power factor of [[0.99]] and input current THD of [[3.2]]% in HIL'],
-    tools: ['MATLAB/Simulink', 'PLECS', 'RT Box', 'ePLL', 'PI control']
+    advantages: [
+      'The sensed voltage has a higher signal-to-noise ratio',
+      'No signal conditioning is needed to level-shift an ac signal for the A/D converter and DSP, and the problems that come with it go away',
+      'It uses the full effective resolution range of the A/D converter, so quantization errors are lower',
+      'There is no need to measure the actual ac grid voltage, which simplifies the control and power-circuit grounding'
+    ],
+    results: ['DC output regulated at 400 V', 'Robust boost PFC performance from a nonlinear R-ePLL term and only two simple proportional feedback loops', 'Validated in simulation and in real-time HIL'],
+    tools: ['MATLAB/Simulink', 'PLECS', 'RT Box', 'R-ePLL', 'Boost PFC']
   },
   {
     id: 'cummins-drive-integration',
@@ -181,6 +191,11 @@ const PROJECTS = [
     title: 'Ultra-High-Speed Compressor Drive at Cummins',
     summary: 'FOC and DTC drive control for an ultra-high-speed compressor, run to 60,000 rpm at full torque load and validated in HIL and SIL.',
     confidential: true,
+    images: [
+      { src: 'assets/projects/cummins/typhoon-hil-interface.jpg', caption: 'TI C2000 LaunchPad mounted on a Typhoon HIL interface board, wired into the real-time simulator for hardware-in-the-loop testing.' },
+      { src: 'assets/projects/cummins/speedgoat.jpg', caption: 'Speedgoat real-time target machine on the test bench, used for real-time testing with the LaunchPad controller.' },
+      { src: 'assets/Cummins - Fridley Plant.jpg', caption: 'Cummins facility in Fridley, Minnesota, where the internship took place.' }
+    ],
     overview: [
       'Summer internship as a Power Electronics Control Intern at Cummins Inc. in Fridley, Minnesota.'
     ],
@@ -201,67 +216,116 @@ const PROJECTS = [
     category: 'power-electronics',
     tag: 'Undergraduate thesis',
     period: 'IOE Pulchowk · 2018',
-    title: 'PV-STATCOM',
-    summary: 'A dual-function inverter that injects solar power by day and gives reactive power support when there is little or no PV generation.',
-    sample: true,
+    title: 'PV-STATCOM: Solar Inverter as a Night-Time STATCOM',
+    summary: 'A control scheme that lets a grid-connected solar inverter supply reactive power at night, and share its capacity with active power by day, without exceeding its rating.',
     images: [
-      { src: 'assets/projects/pv-statcom/pq-24h.svg', caption: 'Active power by day, reactive power support at night.' },
-      { src: 'assets/projects/pv-statcom/pcc-voltage.svg', caption: 'Voltage at the point of common coupling with and without PV-STATCOM.' }
+      { src: 'assets/projects/pv-statcom/power-results.jpg', caption: 'Simulation result: as irradiance falls, active power drops and reactive power rises, while total power stays constant.' },
+      { src: 'assets/projects/pv-statcom/system-block-diagram.jpg', caption: 'Grid-connected PV system with the PV-STATCOM inverter.' },
+      { src: 'assets/projects/pv-statcom/control-logic.jpg', caption: 'PV-STATCOM control logic: DC-link regulation, d-q current references and hysteresis current control.' },
+      { src: 'assets/projects/pv-statcom/simulink-model.jpg', caption: 'MATLAB/Simulink model of the system.' },
+      { src: 'assets/projects/pv-statcom/statcom-var-generator.jpg', caption: 'STATCOM operation as a reactive power (VAR) generator.' },
+      { src: 'assets/projects/pv-statcom/hysteresis-tracking.jpg', caption: 'Principle of hysteresis band current tracking.' },
+      { src: 'assets/projects/pv-statcom/current-tracking.jpg', caption: 'Inverter current tracking its reference inside the hysteresis band.' },
+      { src: 'assets/projects/pv-statcom/id-current.jpg', caption: 'Active-axis current (Id): high when sunlight is available, low at night.' },
+      { src: 'assets/projects/pv-statcom/iq-current.jpg', caption: 'Reactive-axis current (Iq): high at night when the inverter works as a STATCOM.' }
     ],
-    documents: [{ title: 'Technical summary', type: 'PDF', url: 'assets/docs/pv-statcom-summary.pdf' }],
     problem: [
-      'A grid-connected PV inverter is fully used only around midday and sits idle at night. Meanwhile the grid still needs reactive power support to hold voltage, which usually means buying dedicated STATCOM hardware.'
+      'A solar inverter is sized for peak sunshine, but it sits idle at night and runs below its rating on cloudy days. Meanwhile the grid still needs reactive power to hold voltage, and utilities usually buy capacitor banks or dedicated STATCOM hardware for it.',
+      'The question behind this work: can the inverter that is already installed provide that reactive power when the sun is not available?'
     ],
     overview: [
-      'This project developed a dual-function inverter control. Under irradiance the inverter works as a normal grid-connected PV inverter, and during low or no PV generation it works as a STATCOM for reactive power compensation, making fuller use of hardware that is already installed.',
-      'This was Kishor\'s bachelor\'s thesis and was published in the Journal of the Institute of Engineering.'
+      'This project developed a control scheme that turns a grid-connected PV inverter into a STATCOM when there is little or no sunlight. The inverter never supplies more apparent power than its VA rating: as active power falls, reactive power takes its place.',
+      'There are two modes. In partial PV-STATCOM mode (daytime) the inverter injects solar power and uses any spare capacity for reactive power. In full STATCOM mode (night) the PV array is disconnected and the whole inverter supplies reactive power. Irradiance below 200 W/m² is treated as night.',
+      'This was Kishor\'s bachelor\'s thesis. It was published in the Journal of the Institute of Engineering (Vol. 15, No. 3, 2019) with Indraman Tamrakar, Pranisha Karki, Sagar Bimali and Tara Aryal.'
     ],
+    specs: [
+      { value: '82.5 kVA', label: 'Inverter rating' },
+      { value: '700 V', label: 'DC-link reference' },
+      { value: '200 W/m²', label: 'Night threshold' },
+      { value: '10%', label: 'Hysteresis band' }
+    ],
+    team: 'Thesis group of five at the Institute of Engineering, Pulchowk Campus, Tribhuvan University.',
     role: 'Thesis project and co-author. Designed the switching and control logic and built the MATLAB/Simulink models.',
-    approach: [
-      'Developed dual-function control: grid-connected PV inverter under irradiance, STATCOM during low or no PV generation',
-      'Designed switching and control logic to move dynamically between active power injection and reactive power support',
-      'Implemented and validated the control in MATLAB/Simulink for varying irradiance and grid conditions'
+    system: [
+      'PV array of SunPower SPR-315E modules with a boost converter and a P&O MPPT',
+      'Three-phase inverter with 10 mF DC-link capacitor, 4 mH boost inductor and a 0.28 mH coupling inductor',
+      'Two circuit breakers that connect the PV array by day and disconnect it at night'
     ],
-    results: ['Published in the Journal of the Institute of Engineering, vol. 15, no. 3, pp. 411–419 (2019)'],
-    tools: ['MATLAB/Simulink', 'PSIM', 'PID control'],
+    approach: [
+      'Developed dual-function control based on d-q theory, with a DC-link PI controller (Vdc reference 700 V) setting the active-power reference',
+      'Kept the target current at the square root of Id² plus Iq², so total VA stays constant while active and reactive power trade off',
+      'Used a hysteresis band current controller (band set to 10% of the reference current) to generate the inverter switching pulses',
+      'Designed the switching logic that changes mode as irradiance crosses the 200 W/m² threshold',
+      'Built and tested the full system in MATLAB/Simulink 2016a under changing irradiance'
+    ],
+    results: [
+      'DC-link voltage was held near its 700 V reference through the changes in irradiance',
+      'Total apparent power stayed constant while active power fell and reactive power rose as sunlight dropped',
+      'The reactive-axis current (Iq) was highest when the active-axis current (Id) was lowest, as intended',
+      'No extra capacitor bank or STATCOM is needed, which makes it most economical where load factor is high and reactive power demand is fairly constant',
+      'Results are from simulation only; no hardware was built',
+      'Published in the Journal of the Institute of Engineering, vol. 15, no. 3, pp. 411–419 (2019)'
+    ],
+    tools: ['MATLAB/Simulink', 'd-q control', 'Hysteresis current control', 'PI control', 'P&O MPPT'],
     links: [{ label: 'Paper (DOI)', url: 'https://doi.org/10.3126/jie.v15i3.32762' }]
   },
   {
     id: 'wind-solar-hybrid',
     category: 'power-systems',
-    tag: 'Undergraduate',
-    period: 'IOE Pulchowk',
-    title: 'Wind–Solar Hybrid System',
-    summary: 'Modeling a wind–solar hybrid with battery storage for reliable off-grid power in rural Nepal.',
-    sample: true,
+    tag: 'Undergraduate research',
+    period: 'IOE Pulchowk · 2019',
+    title: 'Wind–Solar Hybrid Power System for Off-Grid Nepal',
+    summary: 'A case study and MATLAB/Simulink model of a wind–solar–battery mini-grid that electrifies 83 households in a village in Sindhuli, Nepal.',
     images: [
-      { src: 'assets/projects/wind-solar/site.svg', caption: 'Concept of the hybrid site: wind turbines, PV array, battery room and village load.' },
-      { src: 'assets/projects/wind-solar/daily-profile.svg', caption: 'Typical day: solar and wind generation against community load.' },
-      { src: 'assets/projects/wind-solar/battery-soc.svg', caption: 'Battery state of charge over the same day.' }
+      { src: 'assets/projects/wind-solar/system-diagram.jpg', caption: 'Block diagram of the hybrid system: PV arrays, two wind turbines, battery bank and inverter (source: AEPC, Nepal).' },
+      { src: 'assets/projects/wind-solar/site-map.jpg', caption: 'The site: Chisapani, Hariharpur Gadi village, Sindhuli District, at 355 m elevation.' },
+      { src: 'assets/projects/wind-solar/village-load-curve.jpg', caption: 'Daily load curve of the village, with the evening peak of about 10.6 kW.' },
+      { src: 'assets/projects/wind-solar/simulink-model.jpg', caption: 'MATLAB/Simulink model: PV array with boost converter and MPPT, PMSG wind turbine, DC link and inverter.' },
+      { src: 'assets/projects/wind-solar/solar-inputs.jpg', caption: 'Solar PV inputs: irradiance, temperature, voltage and current.' },
+      { src: 'assets/projects/wind-solar/solar-power.jpg', caption: 'Active power from the solar PV system.' },
+      { src: 'assets/projects/wind-solar/total-power.jpg', caption: 'Total active power from the wind–solar hybrid system.' },
+      { src: 'assets/projects/wind-solar/load-power.jpg', caption: 'Active and reactive power at the load.' }
     ],
-    documents: [{ title: 'Technical summary', type: 'PDF', url: 'assets/docs/wind-solar-hybrid-summary.pdf' }],
     problem: [
-      'Many rural communities in Nepal are far from the national grid. Wind and solar complement each other through the day and across seasons, but the system has to be sized and controlled carefully to cover the load reliably.'
+      'Many villages in Nepal are far from the national grid, and extending lines to a few households is expensive. Diesel generators are a poor answer because of fuel cost, emissions and short life.',
+      'Wind and solar tend to complement each other: summer has strong sun and weak wind, winter the reverse. Together with a battery bank they can serve a village reliably, if the system is sized and modeled well.'
     ],
     overview: [
-      'Designed and modeled a hybrid renewable energy system that combines wind turbines, solar PV and battery storage, and proposed an optimal configuration for rural electrification.'
+      'This paper presents a case study and a model of the wind–solar hybrid mini-grid at Chisapani, Hariharpur Gadi village, Sindhuli District. The system was built in 2017 with Asian Development Bank financing, to serve 83 households.',
+      'It produces about 110 kWh per day against a village demand of 87 kWh per day, with wind and solar each meant to supply half of the annual energy. The evening peak is about 10.6 kW.',
+      'Kishor was a co-author. The work was published in the Journal of the Institute of Engineering (Vol. 15, No. 3, 2019) with Khagendra Bahadur Thapa, Arbin Maharjan, Kishor Kaphle and Tara Aryal.'
     ],
     specs: [
-      { value: '20 kW', label: 'Wind turbines' },
-      { value: '15 kWp', label: 'Solar PV' },
-      { value: 'Battery', label: 'Storage' }
+      { value: '20 kW', label: 'Wind (2 × 10 kW)' },
+      { value: '15 kWp', label: 'Solar (50 × 300 Wp)' },
+      { value: '45 kVA', label: 'Inverter' },
+      { value: '110 kWh', label: 'Daily energy yield' }
     ],
-    role: 'Co-author. Contributed system modeling, power-sharing analysis and performance evaluation in MATLAB/Simulink.',
+    team: 'Department of Electrical Engineering, Pulchowk Campus, Institute of Engineering, Tribhuvan University.',
+    role: 'Co-author. Contributed to the system modeling and the MATLAB/Simulink simulation.',
+    system: [
+      '2 wind turbines of 10 kW each and 50 PV modules of 300 Wp each',
+      'Battery bank of 120 VRLA gel cells (2 V, 100 Ah each), 240 V in total',
+      'One 45 kVA DC/AC inverter feeding 400 V three-phase and 230 V single-phase lines of about 2.9 km'
+    ],
     approach: [
-      'Designed and modeled the wind, solar and battery system',
-      'Analyzed power sharing between wind, solar and storage under varying load and environmental conditions',
-      'Evaluated performance, energy management and stability of the hybrid microgrid in MATLAB/Simulink'
+      'Collected the site data: load curves for households, businesses and street lights, plus solar and wind resource data',
+      'Modeled the wind turbine (power coefficient and tip-speed ratio), the PV array and the battery in MATLAB/Simulink 2016',
+      'Connected a PV array through a boost converter with MPPT, and a PMSG wind turbine through a machine-side converter, to a common DC link and inverter',
+      'Looked for ways to improve the system, such as moving business load to off-peak hours and using the hybrid inverters as STATCOMs'
     ],
     results: [
-      'Proposed an optimal configuration for rural electrification, improving reliability and use of renewable resources',
+      'The simulated system delivered 30 kW of active power (15 kW wind, 15 kW solar) to a load of about 20 kW and 5.5 kVAr',
+      'The solar model ran at 750 W/m² and 35 °C, with about 290 V and 50 A, and followed the irradiance changes while the DC-link voltage stayed near 1 p.u.',
+      'The case study shows 110 kWh/day of generation against 87 kWh/day of demand',
       'Published in the Journal of the Institute of Engineering, vol. 15, no. 3, pp. 360–367 (2019)'
     ],
-    tools: ['MATLAB/Simulink', 'Load analysis', 'Energy management'],
+    next: [
+      'Shift business demand to off-peak hours (about 9–13 h) to flatten the load curve',
+      'Use the hybrid inverters as STATCOMs to supply the village\'s reactive power and support voltage',
+      'Encourage rooftop PV, backed by subsidies and technical support'
+    ],
+    tools: ['MATLAB/Simulink', 'PMSG wind model', 'PV and MPPT modeling', 'Load analysis'],
     links: [{ label: 'Paper (DOI)', url: 'https://doi.org/10.3126/jie.v15i3.32223' }]
   },
   {
@@ -270,86 +334,47 @@ const PROJECTS = [
     tag: 'Undergraduate',
     period: 'IOE Pulchowk',
     title: 'Controlled Rectifier Study',
-    summary: 'Comparing GTO and thyristor rectifiers for isolated micro-grid loads: harmonics, power factor and switching across firing angles.',
-    sample: true,
+    summary: 'A GTO-based electronic load controller that reduces harmonics and improves power factor in an isolated micro-grid, compared with a thyristor design.',
     images: [
-      { src: 'assets/projects/controlled-rectifier/harmonics.svg', caption: 'Current harmonics, GTO vs. thyristor rectifier.' },
-      { src: 'assets/projects/controlled-rectifier/pf-vs-angle.svg', caption: 'Power factor across firing angles.' }
+      { src: 'assets/projects/controlled-rectifier/simulink-model.jpg', caption: 'MATLAB/Simulink model: synchronous generator, GTO-based controller, PI regulation, firing signal generator and dump load.' },
+      { src: 'assets/projects/controlled-rectifier/voltage-waveform.jpg', caption: 'Simulated voltage waveform of the GTO-based controller over 0.06 s (peak about 300 V).' }
     ],
-    documents: [{ title: 'Technical summary', type: 'PDF', url: 'assets/docs/controlled-rectifier-summary.pdf' }],
     problem: [
-      'In a small isolated micro-grid, the harmonics injected by rectifier loads distort the voltage for every other user. The choice of switching device directly affects power quality.'
+      'In a small isolated micro-grid, the rectifier and phase-controlled loads inject harmonics that distort the voltage for every other user and lower the power factor. The choice of switching device directly affects power quality.'
     ],
     overview: [
-      'Engineered and compared GTO- and thyristor-based controlled rectifiers for micro-grid applications with isolated loads.'
+      'The goal of the project was to reduce harmonics and improve the power factor. I built a GTO-based electronic load controller (ELC) for an isolated generator with a dump load, and compared it with a thyristor-based controller for micro-grid applications.'
     ],
     role: 'Built both rectifier models and carried out the comparison.',
+    system: [
+      'Synchronous machine as the isolated source, with the user load and a dump load',
+      'GTO-based controller with a firing signal generator',
+      'PI controller and low-pass filter regulating the controller'
+    ],
     approach: [
       'Developed MATLAB/Simulink models of both rectifiers and validated their steady-state and transient response',
       'Investigated harmonic content, power factor variation and switching characteristics across firing angles',
       'Analyzed trade-offs between the topologies in efficiency and output voltage quality'
     ],
-    tools: ['MATLAB/Simulink', 'Proteus']
+    tools: ['MATLAB/Simulink', 'GTO / thyristor', 'PI control', 'Harmonic analysis']
   },
   {
     id: 'load-flow',
     category: 'power-systems',
-    tag: 'Undergraduate',
-    period: 'IOE Pulchowk',
+    tag: 'Industry · Prism International',
+    period: 'Project Engineer · 2019 – 2021',
     title: 'Load Flow Analysis',
-    summary: 'Newton–Raphson load flow in Python and ETAP for multi-bus distribution systems.',
-    sample: true,
-    images: [
-      { src: 'assets/projects/load-flow/voltage-profile.svg', caption: 'Bus voltage profile along the 30-bus feeder.' },
-      { src: 'assets/projects/load-flow/branch-losses.svg', caption: 'Active power loss by feeder section.' }
-    ],
-    documents: [{ title: 'Technical summary', type: 'PDF', url: 'assets/docs/load-flow-summary.pdf' }],
-    problem: [
-      'Distribution engineers need bus voltages and losses along a feeder to plan upgrades. Long rural feeders often end with voltages below the acceptable limit.'
-    ],
+    summary: 'Newton–Raphson load flow in Python and ETAP for power distribution system analysis.',
+    art: 'grid',
     overview: [
-      'Developed and implemented Newton–Raphson load-flow algorithms in Python and ETAP for 10, 20 and 30-bus distribution systems, and cross-validated the two.'
+      'Developed and implemented Newton–Raphson load flow algorithms in Python and ETAP for power distribution system analysis.'
     ],
-    specs: [
-      { value: '10 / 20 / 30', label: 'Bus systems' },
-      { value: 'Newton–Raphson', label: 'Solver' }
-    ],
-    role: 'Wrote the Newton–Raphson solver in Python and validated it against ETAP.',
     approach: [
-      'Implemented Newton–Raphson load flow in Python and ETAP',
-      'Analyzed voltage profiles, real and reactive power flow, and system losses',
-      'Evaluated performance under varying load, identifying voltage stability limits and how losses are distributed',
-      'Cross-validated results between Python and ETAP'
+      'Analyzed voltage profiles, real and reactive power flow, and system losses across multi-bus network configurations',
+      'Evaluated system performance under varying load conditions, identifying voltage stability limits and loss distribution',
+      'Validated simulation results across Python and ETAP to ensure the accuracy and reliability of the power flow solutions'
     ],
-    tools: ['Python', 'ETAP', 'Power system analysis']
-  },
-  {
-    id: 'cost-estimation',
-    category: 'power-systems',
-    tag: 'Undergraduate',
-    period: 'IOE Pulchowk',
-    title: 'Transmission Line Cost Tool',
-    summary: 'An automated Excel/VBA tool that estimates transmission line cost from voltage level, length and terrain.',
-    sample: true,
-    images: [
-      { src: 'assets/projects/cost-estimation/cost-vs-length.svg', caption: 'Estimated line cost against length for three voltage levels.' },
-      { src: 'assets/projects/cost-estimation/cost-breakdown.svg', caption: 'Cost breakdown per km by component.' }
-    ],
-    documents: [{ title: 'Technical summary', type: 'PDF', url: 'assets/docs/cost-estimation-summary.pdf' }],
-    problem: [
-      'Early in planning, engineers need a quick, consistent cost estimate for alternative line routes and voltage levels, long before a detailed design exists.'
-    ],
-    overview: [
-      'An automated cost-estimation tool for transmission line projects, driven by voltage level, line length and terrain.'
-    ],
-    role: 'Designed the calculation algorithms and programmed the tool.',
-    approach: [
-      'Designed calculation algorithms for material, installation and infrastructure costs',
-      'Automated the estimate in Excel/VBA',
-      'Enabled fast scenario analysis across design configurations'
-    ],
-    results: ['Supports planning and budgeting decisions with faster, more consistent estimates'],
-    tools: ['Excel/VBA', 'C++']
+    tools: ['Python', 'ETAP', 'Newton–Raphson']
   }
 ];
 
@@ -384,7 +409,7 @@ const PROJECTS = [
   grid.innerHTML = PROJECTS.map((p, i) => `
     <li class="project reveal" data-id="${esc(p.id)}" data-category="${esc(p.category || '')}">
       <article>
-        <div class="cover">${cardCover(p)}${p.confidential ? '<span class="badge">Confidential</span>' : ''}</div>
+        <div class="cover">${cardCover(p)}${p.confidential || p.unpublished ? '<span class="badge">Confidential</span>' : ''}</div>
         <div class="card-body">
           <p class="n">${String(i + 1).padStart(2, '0')} · ${esc(p.tag || '')}</p>
           <h3 class="title"><button type="button" class="project-open" aria-haspopup="dialog">${esc(p.title)}</button></h3>
@@ -527,17 +552,20 @@ const PROJECTS = [
         <p class="pd-summary">${txt(p.summary)}</p>
       </header>
       ${p.confidential ? `<p class="pd-note">This work is confidential. Only Kishor's main contributions are listed.</p>` : ''}
+      ${p.unpublished ? `<p class="pd-note">The paper on this work has not been published yet, so this project is confidential.</p>` : ''}
       ${p.sample ? `<p class="pd-note">Pictures, documents and parts of the description on this page are samples for now${hasPh(p) ? `; values with a <mark class="ph">dashed underline</mark> are sample figures` : ''}. They will be replaced with project material.</p>`
         : hasPh(p) ? `<p class="pd-note">Values with a <mark class="ph">dashed underline</mark> are sample figures and will be updated.</p>` : ''}
       ${slideshow(p)}
       ${p.specs ? `<div class="pd-specs">${p.specs.map(s => `<div><b>${txt(s.value)}</b><span>${txt(s.label)}</span></div>`).join('')}</div>` : ''}
-      ${paras('Problem &amp; motivation', p.problem)}
+      ${paras('Problem and motivation', p.problem)}
       ${paras(p.confidential ? 'Role' : 'Overview', p.overview)}
       ${p.team ? `<section><h3>Research team</h3><p>${txt(p.team)}</p></section>` : ''}
       ${p.role ? `<section><h3>My role</h3><p>${txt(p.role)}</p></section>` : ''}
       ${list('System', p.system)}
       ${list('Approach', p.approach)}
+      ${list('Why process the rectified signal directly', p.advantages)}
       ${list(p.confidential ? 'Main contributions' : 'Results', p.results)}
+      ${list('Next steps', p.next)}
       ${p.documents && p.documents.length ? `<section><h3>Documents</h3><div class="pd-docs">${p.documents.map(d => `<a class="doc" href="${esc(d.url)}" target="_blank" rel="noopener"><span class="doc-icon" aria-hidden="true">${esc(d.type || 'PDF')}</span><span><b>${esc(d.title)}</b><small>${esc(d.type || 'PDF')}${p.sample ? ' · sample' : ''} · opens in a new tab</small></span></a>`).join('')}</div></section>` : ''}
       ${p.tools ? `<section><h3>Tools</h3><div class="pd-tools">${p.tools.map(t => `<span>${esc(t)}</span>`).join('')}</div></section>` : ''}
       ${p.links && p.links.length ? `<div class="pd-links">${p.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join('')}</div>` : ''}
