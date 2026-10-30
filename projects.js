@@ -192,8 +192,8 @@ const PROJECTS = [
     summary: 'FOC and DTC drive control for an ultra-high-speed compressor, run to 60,000 rpm at full torque load and validated in HIL and SIL.',
     confidential: true,
     images: [
-      { src: 'assets/projects/cummins/typhoon-hil-interface.jpg', caption: 'TI C2000 LaunchPad mounted on a Typhoon HIL interface board, wired into the real-time simulator for hardware-in-the-loop testing.' },
-      { src: 'assets/projects/cummins/speedgoat.jpg', caption: 'Speedgoat real-time target machine on the test bench, used for real-time testing with the LaunchPad controller.' },
+      { src: 'assets/cummins/typhoon-hil-interface.jpg', caption: 'TI C2000 LaunchPad mounted on a Typhoon HIL interface board, wired into the real-time simulator for hardware-in-the-loop testing.' },
+      { src: 'assets/cummins/speedgoat.jpg', caption: 'Speedgoat real-time target machine on the test bench, used for real-time testing with the LaunchPad controller.' },
       { src: 'assets/Cummins - Fridley Plant.jpg', caption: 'Cummins facility in Fridley, Minnesota, where the internship took place.' }
     ],
     overview: [
