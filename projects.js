@@ -366,6 +366,9 @@ const PROJECTS = [
     title: 'Load Flow Analysis',
     summary: 'Newton–Raphson load flow in Python and ETAP for power distribution system analysis.',
     art: 'grid',
+    images: [
+      { src: 'assets/projects/load-flow/ieee14-load-flow.png', caption: 'Newton–Raphson load flow in Python on the IEEE 14-bus test system (100 MVA base): one-line diagram with solved bus voltages, voltage profile, and convergence in 4 iterations. Total losses 13.39 MW, slack generation 232.4 MW. A public benchmark system, shown as an example of the method.' }
+    ],
     overview: [
       'Developed and implemented Newton–Raphson load flow algorithms in Python and ETAP for power distribution system analysis.'
     ],
