@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=4">
+<link rel="stylesheet" href="styles.css?v=6">
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -46,14 +46,18 @@
       </div>
     </div>
     <div class="hero-tools">
-      <a class="hero-tool left" href="pmsm-p-i-tuner/" aria-label="Open the interactive PMSM P-I speed-loop tuner">
-        <img src="pmsm-p-i-tuner/docs/preview.png" alt="Pole-boundary plot from the P-I speed-loop tuner" width="816" height="470" loading="lazy">
-        <span class="tool-cap"><em>Interactive tool</em><b>P-I speed-loop tuner</b><i>Kp and Ki from pole placement</i><span class="tool-go" aria-hidden="true">&rarr;</span></span>
-      </a>
-          <a class="hero-tool right" href="pmsm-pi-tuner/" aria-label="Open the interactive PMSM PI speed-loop tuner">
-        <img src="pmsm-pi-tuner/docs/preview.png" alt="Pole-boundary plot from the PI speed-loop tuner" width="816" height="470" loading="lazy">
-        <span class="tool-cap"><em>Interactive tool</em><b>PI speed-loop tuner</b><i>Kp and Ki from pole placement</i><span class="tool-go" aria-hidden="true">&rarr;</span></span>
-      </a>
+      <div class="hero-tool left" data-tool="pii">
+        <a class="tool-fallback" href="pmsm-p-i-tuner/" aria-label="Open the interactive PMSM P-I speed-loop tuner">
+          <img src="pmsm-p-i-tuner/docs/preview.png" alt="Pole-boundary plot from the P-I speed-loop tuner" width="816" height="470" loading="lazy">
+          <span class="tool-cap"><em>Interactive tool</em><b>P-I speed-loop tuner</b><i>Kp and Ki from pole placement</i></span>
+        </a>
+      </div>
+      <div class="hero-tool right" data-tool="pi">
+        <a class="tool-fallback" href="pmsm-pi-tuner/" aria-label="Open the interactive PMSM PI speed-loop tuner">
+          <img src="pmsm-pi-tuner/docs/preview.png" alt="Pole-boundary plot from the PI speed-loop tuner" width="816" height="470" loading="lazy">
+          <span class="tool-cap"><em>Interactive tool</em><b>PI speed-loop tuner</b><i>Kp and Ki from pole placement</i></span>
+        </a>
+      </div>
     </div>
     <div class="hero-reel" id="hero-reel" aria-label="Project previews"></div>
     <a class="scroll-cue" href="#about"><span>Scroll</span><span class="chev" aria-hidden="true"></span></a>
@@ -376,6 +380,11 @@
 </div>
 
 <script src="projects.js"></script>
+<script src="pmsm-pi-tuner/js/solver.js"></script>
+<script>window.PMSM_PI = window.PMSM;</script>
+<script src="pmsm-p-i-tuner/js/solver.js"></script>
+<script>window.PMSM_PII = window.PMSM;</script>
+<script src="hero-tools.js?v=3"></script>
 <script src="site.js"></script>
 </body>
 </html>
