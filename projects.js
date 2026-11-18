@@ -90,7 +90,7 @@ const PROJECTS = [
       'Extending the approach toward sensorless operation and higher operating speeds'
     ],
     tools: ['MATLAB/Simulink', 'PLECS', 'RT Box', 'TI C2000 F28379D', 'Code Composer Studio', 'GaN inverter'],
-    links: [{ label: 'SSCET 2026 paper — PI speed controllers (DOI)', url: 'https://doi.org/10.1109/SSCET69323.2026.11735668' }]
+    links: [{ label: 'SSCET 2026 paper — PI speed controllers (DOI)', url: 'https://doi.org/10.1109/SSCET69323.2026.11735668' }, { label: 'PI speed-loop tuner (web app)', url: 'pmsm-pi-tuner/' }]
   },
   {
     id: 'high-speed-pmsm',
