@@ -6,9 +6,9 @@ const close = (a, b, tol, msg) => assert(Math.abs(a - b) <= tol, `${msg}: ${a} v
 const r = P.analyze(P.DEFAULTS);
 assert(!r.error && r.pole, 'expected a feasible pole');
 
-// Fp constant equals the 0.0125 used in the original script
+// Fp constant: 0.0125 (the value in the original script) corresponds to a 9.83 mNm load torque
 const d = P.DEFAULTS;
-close(d.J * d.wrated * Math.PI / 30 * (d.Fp / 100) / d.TL, 0.0125, 1e-5, 'Fp constant');
+close(d.J * d.wrated * Math.PI / 30 * (d.Fp / 100) / 9.83e-3, 0.0125, 1e-5, 'Fp constant');
 
 // Peak-time lines are horizontal at wd = pi/tp
 close(r.curves.tp[0].wd, Math.PI / 0.04, 1e-9, 'tp1 line'); close(r.curves.tp[1].wd, Math.PI / 0.06, 1e-9, 'tp2 line');

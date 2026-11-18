@@ -11,7 +11,7 @@
     J: 1.15e-7,     // kg m^2
     B: 1.25e-8,     // N m s
     Kt: 0.0026,     // N m / A
-    TL: 9.83e-3,    // N m (torque load)
+    TL: 9.28e-3,    // N m (torque load)
     wrated: 60000,  // rpm
     Fp: 17,         // percent
     tp1: 0.04,      // s
