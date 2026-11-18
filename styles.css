@@ -143,7 +143,9 @@ strong, b{ font-weight:600; color:var(--ink); }
 }
 .hero-cta{ display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-top:2.2rem; }
 
-/* interactive tool card: right side of the hero, links to the PI tuner */
+/* interactive tool cards: left and right sides of the hero */
+.hero-tools{ display:contents; }
+.hero-tool.left{ right:auto; left:var(--gutter); }
 .hero-tool{
   position:absolute; right:var(--gutter); top:calc(var(--header-h) + 2.2rem);
   width:clamp(240px, 20vw, 340px); z-index:2; text-decoration:none; text-align:left; color:var(--ink);
@@ -184,7 +186,8 @@ strong, b{ font-weight:600; color:var(--ink); }
 }
 .hero-tool:hover .tool-go, .hero-tool:focus-visible .tool-go{ background:var(--copper); color:var(--bg-deep); transform:translateX(3px); }
 @media (max-width: 1180px){
-  .hero-tool{ position:static; margin-top:1.8rem; width:min(310px, 82%); }
+  .hero-tools{ display:flex; flex-wrap:wrap; justify-content:center; gap:1.2rem; margin-top:1.8rem; width:100%; padding:0 var(--gutter); }
+  .hero-tool, .hero-tool.left{ position:static; width:min(310px, 100%); }
 }
 @media (prefers-reduced-motion: reduce){ .tool-cap em::before{ animation:none; } }
 

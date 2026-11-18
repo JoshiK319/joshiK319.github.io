@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PMSM Speed-Loop P-I Tuner</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --fg: #1b1f24; --muted: #5d6673; --border: #dfe3e8; --grid: #e6e9ee;
+    --accent: #2a5bd7; --fp: #2a5bd7; --zeta: #d6249f; --tp1: #e69f00; --tp2: #1b1f24;
+    --region: 42, 160, 110; --pole: #e5322d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1216; --card: #171b21; --fg: #e8ebef; --muted: #99a3b0; --border: #2a313a; --grid: #262d36;
+      --accent: #6c93ff; --fp: #6c93ff; --zeta: #ff5fc0; --tp1: #ffb62e; --tp2: #e8ebef;
+      --region: 70, 200, 140; --pole: #ff6b66;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+         font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header, main, footer { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+  header { padding-top: 26px; padding-bottom: 6px; }
+  h1 { margin: 0; font-size: 1.55rem; letter-spacing: -0.01em; }
+  .sub { margin: 4px 0 0; color: var(--muted); }
+  a { color: var(--accent); }
+  main { display: grid; grid-template-columns: 300px 1fr; gap: 18px; padding-top: 16px; padding-bottom: 20px; }
+  @media (max-width: 860px) { main { grid-template-columns: 1fr; } }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+  .card h2 { margin: 0 0 10px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .field { display: grid; grid-template-columns: 1fr 120px; gap: 8px; align-items: center; margin: 7px 0; }
+  .field label { font-size: .92rem; }
+  .field label small { color: var(--muted); }
+  .field input { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 7px;
+                 background: var(--bg); color: var(--fg); font: inherit; text-align: right; }
+  .field input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  .field input.bad { border-color: var(--pole); }
+  button { margin-top: 8px; padding: 7px 12px; border: 1px solid var(--border); border-radius: 8px;
+           background: transparent; color: var(--fg); font: inherit; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  #msg { margin-top: 10px; color: var(--pole); min-height: 1.2em; font-size: .9rem; }
+  .right { display: grid; gap: 18px; min-width: 0; }
+  canvas { width: 100%; display: block; }
+  #legend { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 10px 0 0; margin: 0; font-size: .85rem; color: var(--muted); }
+  #legend li { display: flex; align-items: center; gap: 7px; }
+  .sw { display: inline-block; width: 26px; height: 0; border-top: 3px solid; }
+  .sw.dash { border-top-style: dashed; }
+  .sw.box { width: 14px; height: 14px; border: 0; border-radius: 3px; }
+  .sw.star { width: auto; height: auto; border: 0; font-size: 15px; line-height: 1; }
+  #results { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .stat { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+  .stat .k { color: var(--muted); font-size: .85rem; }
+  .stat .v { font-size: 1.25rem; font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .stat.big .v { font-size: 1.5rem; font-weight: 600; }
+  #diagram { width: 100%; height: auto; color: var(--fg); }
+  #diagram text { fill: currentColor; font-family: Georgia, "Times New Roman", serif; font-size: 15px; }
+  #diagram .blk { fill: none; stroke: currentColor; stroke-width: 1.5; }
+  #diagram .ln { stroke: currentColor; stroke-width: 1.5; fill: none; }
+  footer { padding-top: 4px; padding-bottom: 30px; color: var(--muted); font-size: .88rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>PMSM Speed-Loop P-I Tuner</h1>
+  <p class="sub">Kp and Ki from pole placement &middot; <a id="paper-link" href="#">Reference paper</a></p>
+</header>
+
+<main>
+  <section class="card" id="inputs">
+    <h2>Inputs</h2>
+    <form id="form" autocomplete="off" onsubmit="return false"></form>
+    <button type="button" id="reset">Reset to defaults</button>
+    <div id="msg" role="alert"></div>
+  </section>
+
+  <div class="right">
+    <section class="card">
+      <svg id="diagram" viewBox="0 0 640 175" role="img" aria-label="P-I speed control loop">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <text x="6" y="52">&omega;<tspan font-size="11" dy="4">ref</tspan></text>
+        <line class="ln" x1="6" y1="64" x2="84" y2="64" marker-end="url(#ah)"/>
+        <circle class="blk" cx="100" cy="64" r="15"/>
+        <text x="93" y="69" font-size="14">+</text><text x="94" y="92" font-size="14">&minus;</text>
+        <line class="ln" x1="115" y1="64" x2="152" y2="64" marker-end="url(#ah)"/>
+        <text x="126" y="56" font-style="italic">e</text>
+        <rect class="blk" x="154" y="44" width="84" height="40"/>
+        <text x="172" y="62" font-size="14" font-style="italic">K<tspan font-size="11" dy="4" font-style="normal">i</tspan></text>
+        <line class="ln" x1="166" y1="66" x2="226" y2="66"/><text x="192" y="80" font-size="13" font-style="italic">s</text>
+        <line class="ln" x1="238" y1="64" x2="254" y2="64" marker-end="url(#ah)"/>
+        <circle class="blk" cx="270" cy="64" r="15"/>
+        <text x="263" y="69" font-size="14">+</text><text x="276" y="92" font-size="14">&minus;</text>
+        <line class="ln" x1="285" y1="64" x2="322" y2="64" marker-end="url(#ah)"/>
+        <rect class="blk" x="324" y="44" width="52" height="40"/>
+        <text x="338" y="70" font-style="italic">K<tspan font-size="11" dy="4" font-style="normal">t</tspan></text>
+        <line class="ln" x1="376" y1="64" x2="428" y2="64" marker-end="url(#ah)"/>
+        <text x="392" y="56" font-style="italic">T<tspan font-size="11" dy="4" font-style="normal">e</tspan></text>
+        <circle class="blk" cx="444" cy="64" r="15"/>
+        <text x="437" y="69" font-size="14">+</text><text x="456" y="48" font-size="14">&minus;</text>
+        <line class="ln" x1="444" y1="14" x2="444" y2="47" marker-end="url(#ah)"/>
+        <text x="452" y="26">T<tspan font-size="11" dy="4">Load</tspan></text>
+        <line class="ln" x1="459" y1="64" x2="500" y2="64" marker-end="url(#ah)"/>
+        <rect class="blk" x="502" y="44" width="84" height="40"/>
+        <text x="518" y="62" font-size="13">1</text><line class="ln" x1="512" y1="66" x2="576" y2="66"/>
+        <text x="512" y="80" font-size="13"><tspan font-style="italic">Js</tspan> + <tspan font-style="italic">B</tspan></text>
+        <line class="ln" x1="586" y1="64" x2="636" y2="64" marker-end="url(#ah)"/>
+        <text x="598" y="52">&omega;<tspan font-size="11" dy="4">out</tspan></text>
+        <polyline class="ln" points="608,64 608,156 100,156 100,80" marker-end="url(#ah)"/>
+        <polyline class="ln" points="608,118 306,118"/>
+        <rect class="blk" x="232" y="102" width="74" height="32"/>
+        <text x="262" y="123" font-style="italic">K<tspan font-size="11" dy="4" font-style="normal">p</tspan></text>
+        <line class="ln" x1="269" y1="102" x2="269" y2="80" marker-end="url(#ah)"/>
+      </svg>
+    </section>
+
+    <section class="card">
+      <canvas id="plot" aria-label="Closed-loop pole boundaries"></canvas>
+      <ul id="legend"></ul>
+    </section>
+
+    <section class="card">
+      <h2>Selected pole and gains</h2>
+      <div id="results"></div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  Reference: K. Joshi and M. Karimi-Ghartemani, &ldquo;Systematic Design and Comparative Analysis of Two PI Speed
+  Controllers for PMSM Drives&rdquo; &mdash; <a id="paper-link2" href="#">link to paper</a>.
+</footer>
+
+<script src="js/solver.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
