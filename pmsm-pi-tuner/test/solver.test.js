@@ -30,8 +30,9 @@ assert(P.analyze(Object.assign({}, P.DEFAULTS, { J: -1 })).error, 'negative J re
 // Time response at the default pole (checked against an independent Python/SciPy integration)
 {
   const m = P.simulate(P.DEFAULTS, r.gains, 'PI', { sigma: r.pole.sigma });
-  close(m.tp, 0.0481, 5e-4, 'PI tp'); close(m.Mp, 19.59, 0.1, 'PI overshoot'); close(m.Fp, 12.48, 0.1, 'PI Fp');
+  close(m.tp, 0.0481, 5e-4, 'PI tp'); close(m.Mp, 19.59, 0.1, 'PI overshoot'); close(m.Fp, 12.57, 0.1, 'PI Fp');
   assert(m.Fp < P.DEFAULTS.Fp, 'simulated Fp inside the design limit');
+  { const i = m.t.findIndex((t) => t >= m.tl) - 1; assert(Math.abs(m.rpm[i] - m.rated) < 0.006 * m.rated, 'speed settled before the load step'); }
   assert(m.tp >= P.DEFAULTS.tp1 && m.tp <= P.DEFAULTS.tp2, 'simulated tp inside the band');
 }
 

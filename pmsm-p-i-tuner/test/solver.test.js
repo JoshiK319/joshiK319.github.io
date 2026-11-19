@@ -27,7 +27,8 @@ assert(P.analyze(Object.assign({}, d, { J: -1 })).error, 'negative J rejected');
 // Time response at the default pole (checked against an independent Python integration)
 {
   const m = P.simulate(d, r.gains, 'P-I', { sigma: pole.sigma });
-  close(m.tp, 0.0501, 5e-4, 'P-I tp'); close(m.Mp, 2.09, 0.1, 'P-I overshoot'); close(m.Fp, 5.57, 0.1, 'P-I Fp');
+  close(m.tp, 0.0501, 5e-4, 'P-I tp'); close(m.Mp, 2.09, 0.1, 'P-I overshoot'); close(m.Fp, 5.59, 0.1, 'P-I Fp');
+  { const i = m.t.findIndex((t) => t >= m.tl) - 1; assert(Math.abs(m.rpm[i] - m.rated) < 0.006 * m.rated, 'speed settled before the load step'); }
   assert(m.tp >= d.tp1 && m.tp <= d.tp2, 'simulated tp inside the band');
 }
 

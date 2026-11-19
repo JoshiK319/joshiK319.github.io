@@ -28,6 +28,8 @@
   main { display: grid; grid-template-columns: 300px 1fr; gap: 18px; padding-top: 16px; padding-bottom: 20px; }
   @media (max-width: 860px) { main { grid-template-columns: 1fr; } }
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+  .pair { display: grid; grid-template-columns: 1fr; gap: 18px; align-items: start; }
+  @media (min-width: 1180px) { .pair { grid-template-columns: 1fr 1fr; } }
   .card h2 { margin: 0 0 10px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
   .field { display: grid; grid-template-columns: 1fr 120px; gap: 8px; align-items: center; margin: 7px 0; }
   .field label { font-size: .92rem; }
@@ -117,7 +119,9 @@
       </svg>
     </section>
 
+    <div class="pair">
     <section class="card">
+      <h2>Pole plane</h2>
       <canvas id="plot" aria-label="Closed-loop pole boundaries"></canvas>
       <ul id="legend"></ul>
     </section>
@@ -127,6 +131,7 @@
       <canvas id="resp" aria-label="Speed response to a rated-speed step and a load-torque step"></canvas>
       <div id="resp-stats" style="margin-top:12px"></div>
     </section>
+    </div>
 
     <section class="card">
       <h2>Selected pole and gains</h2>
@@ -140,7 +145,7 @@
   Controllers for PMSM Drives&rdquo; &mdash; <a id="paper-link2" href="#">link to paper</a>.
 </footer>
 
-<script src="js/solver.js?v=2"></script>
-<script src="js/app.js?v=2"></script>
+<script src="js/solver.js?v=3"></script>
+<script src="js/app.js?v=4"></script>
 </body>
 </html>

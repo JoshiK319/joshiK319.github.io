@@ -147,7 +147,7 @@ strong, b{ font-weight:600; color:var(--ink); }
 .hero-tools{ display:contents; }
 .hero-tool{
   position:absolute; right:var(--gutter); top:calc(var(--header-h) + 0.4rem);
-  width:clamp(290px, 21vw, 400px); z-index:2; text-align:left; color:var(--ink);
+  width:clamp(335px, 22.5vw, 400px); z-index:2; text-align:left; color:var(--ink);
   padding:12px; border-radius:16px; border:1px solid transparent;
   background:
     linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
@@ -170,7 +170,7 @@ strong, b{ font-weight:600; color:var(--ink); }
 
 /* live card */
 .tool-head{ display:flex; align-items:center; justify-content:space-between; gap:0.5rem; }
-.tool-head em{
+.tool-head em{ white-space:nowrap;
   display:inline-flex; align-items:center; gap:0.45rem; font-style:normal; font-size:0.66rem;
   letter-spacing:0.14em; text-transform:uppercase; font-weight:600; color:var(--copper-hi);
 }
@@ -196,7 +196,7 @@ strong, b{ font-weight:600; color:var(--ink); }
 .tool-diagram .blk{ fill:none; stroke:currentColor; stroke-width:1.7; }
 .tool-diagram .ln{ stroke:currentColor; stroke-width:1.7; fill:none; }
 .tool-plot{
-  display:block; width:100%; height:116px; margin-top:6px; border-radius:9px; cursor:crosshair; touch-action:none;
+  display:block; width:100%; height:108px; margin-top:6px; border-radius:9px; cursor:crosshair; touch-action:none;
   background:rgba(13,17,23,0.55); border:1px solid rgba(238,241,245,0.08);
 }
 .tool-plot[hidden]{ display:none; }
@@ -228,9 +228,13 @@ strong, b{ font-weight:600; color:var(--ink); }
 .chip.ok{ color:#46C88C; border-color:rgba(70,200,140,0.55); }
 .chip.no{ color:var(--copper-hi); border-color:rgba(227,139,61,0.55); }
 
+@media (min-width: 1760px){ .hero-tool{ width:min(26vw, 520px); } }
+.hero-tool.side .tool-views{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.hero-tool.side .tool-tabs{ display:none; }
+.hero-tool.side .tool-plot{ height:128px; margin-top:8px; }
 @media (max-width: 1480px){
   .hero-tools{ display:flex; flex-wrap:wrap; justify-content:center; gap:1.2rem; margin-top:1.8rem; width:100%; padding:0 var(--gutter); }
-  .hero-tool, .hero-tool.left{ position:static; width:min(420px, 100%); }
+  .hero-tool, .hero-tool.left{ position:static; width:min(600px, 100%); }
 }
 @media (prefers-reduced-motion: reduce){ .tool-head em::before{ animation:none; } }
 

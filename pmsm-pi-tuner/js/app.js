@@ -259,8 +259,8 @@
     c.fillStyle = col('--fp'); c.textAlign = 'left';
     c.fillText('Fₚ = ' + m.Fp.toFixed(1) + '% undershoot', px(m.dip.t) + 10, py(m.dip.rpm) + 18);
     c.fillStyle = col('--muted'); c.textAlign = 'left'; c.font = '12px system-ui, sans-serif';
-    c.fillText('load step', px(m.tl) + 6, T + 10);
-    c.save(); c.translate(px(m.peak.t) - 6, py(0) - 8); c.rotate(-Math.PI / 2); c.textAlign = 'left'; c.fillStyle = col('--fg');
+    c.fillText('load step', px(m.tl) + 6, T + ph - 10);
+    c.save(); c.translate(px(m.peak.t) + 16, py(0) - 8); c.rotate(-Math.PI / 2); c.textAlign = 'left'; c.fillStyle = col('--fg');
     c.fillText('tₚ = ' + m.tp.toFixed(3) + ' s', 0, 0); c.restore();
     c.restore();
     c.strokeStyle = col('--fg'); c.strokeRect(L, T, pw, ph);
