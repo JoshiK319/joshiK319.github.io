@@ -48,7 +48,7 @@
   .sw.dash { border-top-style: dashed; }
   .sw.box { width: 14px; height: 14px; border: 0; border-radius: 3px; }
   .sw.star { width: auto; height: auto; border: 0; font-size: 15px; line-height: 1; }
-  #results { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  #results, #resp-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
   .stat { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
   .stat .k { color: var(--muted); font-size: .85rem; }
   .stat .v { font-size: 1.25rem; font-variant-numeric: tabular-nums; margin-top: 2px; }
@@ -123,6 +123,12 @@
     </section>
 
     <section class="card">
+      <h2>Speed response at the selected pole</h2>
+      <canvas id="resp" aria-label="Speed response to a rated-speed step and a load-torque step"></canvas>
+      <div id="resp-stats" style="margin-top:12px"></div>
+    </section>
+
+    <section class="card">
       <h2>Selected pole and gains</h2>
       <div id="results"></div>
     </section>
@@ -134,7 +140,7 @@
   Controllers for PMSM Drives&rdquo; &mdash; <a id="paper-link2" href="#">link to paper</a>.
 </footer>
 
-<script src="js/solver.js"></script>
-<script src="js/app.js"></script>
+<script src="js/solver.js?v=2"></script>
+<script src="js/app.js?v=2"></script>
 </body>
 </html>

@@ -59,8 +59,8 @@
   }
 
   const CONFIG = {
-    pi:  { title: 'PI speed-loop tuner',  href: 'pmsm-pi-tuner/',   diagram: diagramPI,  id: 'ahpi' },
-    pii: { title: 'P-I speed-loop tuner', href: 'pmsm-p-i-tuner/', diagram: diagramPII, id: 'ahpii' }
+    pi:  { title: 'PI speed-loop tuner',  href: 'pmsm-pi-tuner/',   diagram: diagramPI,  id: 'ahpi',  structure: 'PI' },
+    pii: { title: 'P-I speed-loop tuner', href: 'pmsm-p-i-tuner/', diagram: diagramPII, id: 'ahpii', structure: 'P-I' }
   };
 
   const fmt = (v) => Number(v.toPrecision(3)).toString();
@@ -84,14 +84,17 @@
 
   function build(card, key) {
     const cfg = CONFIG[key], S = SOLVERS[key], D = S.DEFAULTS;
-    const state = { Fp: D.Fp, tp1: D.tp1, tp2: D.tp2, custom: null, res: null, cursor: null, drag: false };
+    const state = { Fp: D.Fp, tp1: D.tp1, tp2: D.tp2, custom: null, res: null, cursor: null, drag: false, view: 'poles' };
 
     card.classList.add('is-live');
     card.innerHTML =
       '<div class="tool-head"><em>Interactive tool</em><a class="tool-open" href="' + cfg.href + '">Open full tool <span aria-hidden="true">&rarr;</span></a></div>' +
       '<a class="tool-name" href="' + cfg.href + '">' + cfg.title + '</a>' +
       '<div class="tool-diagram">' + cfg.diagram(cfg.id) + '</div>' +
+      '<div class="tool-tabs" role="tablist"><button type="button" role="tab" class="on" data-v="poles" aria-selected="true">Pole plane</button>' +
+      '<button type="button" role="tab" data-v="resp" aria-selected="false">Speed response</button></div>' +
       '<canvas class="tool-plot" tabindex="0" aria-label="Closed-loop pole boundaries. Click or use arrow keys to place a pole."></canvas>' +
+      '<canvas class="tool-plot tool-resp" hidden role="img" aria-label="Speed response: rated-speed step, then a load-torque step, with overshoot, peak time and load fluctuation marked."></canvas>' +
       '<div class="tool-sliders">' +
         '<label><span>F<sub>p</sub> <output data-o="Fp"></output></span><input type="range" data-k="Fp" min="5" max="30" step="1" value="' + D.Fp + '"></label>' +
         '<label><span>t<sub>p1</sub> <output data-o="tp1"></output></span><input type="range" data-k="tp1" min="0.02" max="0.05" step="0.005" value="' + D.tp1 + '"></label>' +
@@ -101,7 +104,8 @@
       '<button type="button" class="tool-best">Best pole</button></div>' +
       '<div class="pole"><span data-r="pole"></span><span class="chip" data-r="chip"></span></div></div>';
 
-    const canvas = card.querySelector('canvas'), ctx = canvas.getContext('2d');
+    const canvas = card.querySelector('canvas.tool-plot:not(.tool-resp)'), ctx = canvas.getContext('2d');
+    const rcv = card.querySelector('canvas.tool-resp'), rctx = rcv.getContext('2d');
     const out = (k) => card.querySelector('[data-o="' + k + '"]');
     const rd = (k) => card.querySelector('[data-r="' + k + '"]');
     const base = document.createElement('canvas');
@@ -141,7 +145,55 @@
       const ok = inside(p), chip = rd('chip');
       chip.textContent = ok ? 'In region' : 'Outside region';
       chip.className = 'chip ' + (ok ? 'ok' : 'no');
+      if (state.view === 'resp') drawResp();
     }
+
+    // ---- speed response of the active pole: rated-speed step, then the load torque once settled ----
+    function drawResp() {
+      const dpr = window.devicePixelRatio || 1, cw = rcv.clientWidth, ch = rcv.clientHeight;
+      if (!cw || !ch) return;
+      rcv.width = Math.round(cw * dpr); rcv.height = Math.round(ch * dpr);
+      const c = rctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, cw, ch);
+      const p = activePole(); if (!p || !state.res || state.res.error) return;
+      const g = S.gainsFromPole(p.sigma, p.omega, D.J, D.B, D.Kt);
+      const m = S.simulate(state.res.params, g, cfg.structure, { sigma: p.sigma });
+      const L = 34, R = 8, T = 8, B = 20, pw = cw - L - R, ph = ch - T - B;
+      const ymax = Math.max(m.peak.rpm, m.rated) * 1.2;
+      const x = (t) => L + t / m.T * pw, y = (v) => T + (1 - v / ymax) * ph;
+      c.font = '10px system-ui, sans-serif'; c.lineWidth = 1; c.strokeStyle = C.grid; c.fillStyle = C.faint;
+      c.textAlign = 'center'; c.textBaseline = 'top';
+      niceTicks(0, m.T, 4).forEach((v) => { c.beginPath(); c.moveTo(x(v), T); c.lineTo(x(v), T + ph); c.stroke(); c.fillText(String(+v.toFixed(2)), x(v), T + ph + 4); });
+      c.textAlign = 'right'; c.textBaseline = 'middle';
+      niceTicks(0, ymax, 3).forEach((v) => { c.beginPath(); c.moveTo(L, y(v)); c.lineTo(L + pw, y(v)); c.stroke(); c.fillText(String(+(v / 1e4).toFixed(1)), L - 5, y(v)); });
+      c.save(); c.beginPath(); c.rect(L, T, pw, ph); c.clip();
+      c.strokeStyle = C.faint; c.setLineDash([2, 3]); c.beginPath(); c.moveTo(L, y(m.rated)); c.lineTo(L + pw, y(m.rated)); c.stroke();
+      c.setLineDash([4, 3]); c.beginPath(); c.moveTo(x(m.tl), T); c.lineTo(x(m.tl), T + ph); c.stroke();
+      c.strokeStyle = C.dim; c.beginPath(); c.moveTo(x(m.peak.t), y(0)); c.lineTo(x(m.peak.t), y(m.peak.rpm)); c.stroke(); c.setLineDash([]);
+      c.strokeStyle = C.ink; c.lineWidth = 1.7; c.beginPath();
+      m.t.forEach((t, i) => { if (i) c.lineTo(x(t), y(m.rpm[i])); else c.moveTo(x(t), y(m.rpm[i])); });
+      c.stroke();
+      const dot = (X, Y, col) => { c.fillStyle = col; c.beginPath(); c.arc(X, Y, 3, 0, 2 * Math.PI); c.fill(); };
+      dot(x(m.peak.t), y(m.peak.rpm), '#FF6B6B'); dot(x(m.dip.t), y(m.dip.rpm), C.fp);
+      c.font = '10px system-ui, sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'left';
+      const put = (txt, X, Y, col) => { const w = c.measureText(txt).width; c.fillStyle = col; c.fillText(txt, Math.min(X, L + pw - w - 2), Y); };
+      put(m.Mp.toFixed(1) + '% overshoot', x(m.peak.t) + 8, y(m.peak.rpm) - 8, '#FF6B6B');
+      put('F\u209a ' + m.Fp.toFixed(1) + '% undershoot', x(m.dip.t) + 6, y(m.dip.rpm) + 11, C.fp);
+      c.save(); c.translate(x(m.peak.t) + 12, y(0) - 4); c.rotate(-Math.PI / 2); c.fillStyle = C.dim; c.textAlign = 'left';
+      c.fillText('t\u209a ' + m.tp.toFixed(3) + ' s', 0, 0); c.restore();
+      c.fillStyle = C.faint; c.fillText('load', x(m.tl) + 4, T + 7);
+      c.restore();
+      c.strokeStyle = C.axis; c.strokeRect(L, T, pw, ph);
+      c.fillStyle = C.faint; c.textBaseline = 'alphabetic'; c.textAlign = 'right'; c.fillText('s', L + pw, T + ph + 17);
+      c.save(); c.translate(9, T + ph / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.fillText('r/min \u00d710\u2074', 0, 0); c.restore();
+    }
+
+    function setView(v) {
+      state.view = v;
+      card.querySelectorAll('.tool-tabs button').forEach((b) => { const on = b.dataset.v === v; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+      canvas.hidden = v !== 'poles'; rcv.hidden = v !== 'resp';
+      if (v === 'resp') drawResp(); else if (layout()) { drawBase(); paint(); }
+    }
+    card.querySelectorAll('.tool-tabs button').forEach((b) => b.addEventListener('click', () => setView(b.dataset.v)));
 
     function layout() {
       const dpr = window.devicePixelRatio || 1, cw = canvas.clientWidth, ch = canvas.clientHeight;
@@ -270,7 +322,7 @@
     card.querySelector('.tool-best').addEventListener('click', () => { state.custom = null; updateRead(); paint(); });
 
     let rt = null;
-    window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (layout()) { drawBase(); paint(); } }, 100); });
+    window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (state.view === 'resp') drawResp(); else if (layout()) { drawBase(); paint(); } }, 100); });
 
     setLabels();
     requestAnimationFrame(() => { layout(); compute(); });

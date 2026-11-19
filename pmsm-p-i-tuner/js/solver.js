@@ -106,5 +106,42 @@
     };
   }
 
-  return { DEFAULTS, ZETA_LINES, validate, analyze, gainsFromPole };
+  // ---- time response: rated-speed step at t = 0, load-torque step once the speed has settled ----
+  // Linear plant J dw/dt = Kt*iq - B*w - TL (current loop taken as ideal), integrated with RK4.
+  // structure 'PI':  iq = Kp*e + Ki*x      'P-I':  iq = Ki*x - Kp*w      (x' = e = w_ref - w)
+  function simulate(p, gains, structure, opts) {
+    const { J, B, Kt, TL } = p, Kp = gains.Kp, Ki = gains.Ki;
+    const W = p.wrated * Math.PI / 30;
+    const sg = (opts && Number.isFinite(opts.sigma) && opts.sigma < 0) ? -opts.sigma : 30;
+    const tl = Math.min(3, Math.max(0.25, Math.ceil(6 / sg / 0.05) * 0.05));   // load step after settling
+    const T = tl + Math.max(0.15, Math.min(1.5, 6 / sg));
+    const N = 20000, dt = T / N, stride = 40;
+    const pi = structure !== 'P-I';
+    const f = (w, x, tq, out) => {
+      const e = W - w, iq = pi ? Kp * e + Ki * x : Ki * x - Kp * w;
+      out[0] = (Kt * iq - B * w - tq) / J; out[1] = e;
+    };
+    const k1 = [0, 0], k2 = [0, 0], k3 = [0, 0], k4 = [0, 0];
+    let w = 0, x = 0;
+    const t = [0], rpm = [0], c = 30 / Math.PI;
+    let pk = { t: 0, rpm: 0 }, dip = { t: tl, rpm: Infinity };
+    for (let n = 0; n < N; n++) {
+      const tc = n * dt, tq = tc >= tl ? TL : 0;
+      f(w, x, tq, k1); f(w + dt / 2 * k1[0], x + dt / 2 * k1[1], tq, k2);
+      f(w + dt / 2 * k2[0], x + dt / 2 * k2[1], tq, k3); f(w + dt * k3[0], x + dt * k3[1], tq, k4);
+      w += dt / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]);
+      x += dt / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
+      const tn = (n + 1) * dt, r = w * c;
+      if (tn < tl) { if (r > pk.rpm) pk = { t: tn, rpm: r }; }
+      else if (r < dip.rpm) dip = { t: tn, rpm: r };
+      if ((n + 1) % stride === 0) { t.push(tn); rpm.push(r); }
+    }
+    const rated = p.wrated;
+    return {
+      t, rpm, tl, T, rated, peak: pk, dip,
+      tp: pk.t, Mp: Math.max(0, (pk.rpm - rated) / rated * 100), Fp: Math.max(0, (rated - dip.rpm) / rated * 100)
+    };
+  }
+
+  return { DEFAULTS, ZETA_LINES, validate, analyze, gainsFromPole, simulate };
 });

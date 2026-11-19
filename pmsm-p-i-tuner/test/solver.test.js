@@ -24,5 +24,12 @@ close(g.Kp, 0.0043, 5e-5, 'Kp(-49,78)'); close(g.Ki, 0.3696, 5e-4, 'Ki(-49,78)')
 
 assert(P.analyze(Object.assign({}, d, { tp1: 0.05, tp2: 0.05 })).error, 'equal tp rejected');
 assert(P.analyze(Object.assign({}, d, { J: -1 })).error, 'negative J rejected');
+// Time response at the default pole (checked against an independent Python integration)
+{
+  const m = P.simulate(d, r.gains, 'P-I', { sigma: pole.sigma });
+  close(m.tp, 0.0501, 5e-4, 'P-I tp'); close(m.Mp, 2.09, 0.1, 'P-I overshoot'); close(m.Fp, 5.57, 0.1, 'P-I Fp');
+  assert(m.tp >= d.tp1 && m.tp <= d.tp2, 'simulated tp inside the band');
+}
+
 console.log('All tests passed. Default pole: %s + j%s, Kp=%s, Ki=%s',
   pole.sigma.toFixed(2), pole.omega.toFixed(2), r.gains.Kp.toPrecision(4), r.gains.Ki.toPrecision(4));

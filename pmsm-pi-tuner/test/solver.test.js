@@ -27,5 +27,13 @@ for (const [a, b] of [[0.05, 0.06], [0.03, 0.05], [0.04, 0.08]]) {
 assert(P.analyze(Object.assign({}, P.DEFAULTS, { tp1: 0.05, tp2: 0.05 })).error, 'equal tp rejected');
 assert(P.analyze(Object.assign({}, P.DEFAULTS, { J: -1 })).error, 'negative J rejected');
 
+// Time response at the default pole (checked against an independent Python/SciPy integration)
+{
+  const m = P.simulate(P.DEFAULTS, r.gains, 'PI', { sigma: r.pole.sigma });
+  close(m.tp, 0.0481, 5e-4, 'PI tp'); close(m.Mp, 19.59, 0.1, 'PI overshoot'); close(m.Fp, 12.48, 0.1, 'PI Fp');
+  assert(m.Fp < P.DEFAULTS.Fp, 'simulated Fp inside the design limit');
+  assert(m.tp >= P.DEFAULTS.tp1 && m.tp <= P.DEFAULTS.tp2, 'simulated tp inside the band');
+}
+
 console.log('All tests passed. Default pole: %s + j%s, Kp=%s, Ki=%s',
   r.pole.sigma.toFixed(2), r.pole.omega.toFixed(2), r.gains.Kp.toPrecision(4), r.gains.Ki.toPrecision(4));

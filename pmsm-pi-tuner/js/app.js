@@ -20,6 +20,10 @@
   const msg = document.getElementById('msg');
   const canvas = document.getElementById('plot');
   const ctx = canvas.getContext('2d');
+  const rc = document.getElementById('resp');
+  const rctx = rc.getContext('2d');
+  const STRUCTURE = 'PI';
+  let lastResp = null;
   const inputs = {};
 
   FIELDS.forEach(([key, label, unit]) => {
@@ -63,6 +67,7 @@
     draw(res);
     legend(res);
     results(res);
+    response(res);
   }
 
   function clearAll() {
@@ -70,6 +75,8 @@
     canvas.width = cw * dpr; canvas.height = 40; canvas.style.height = '40px';
     document.getElementById('legend').innerHTML = '';
     document.getElementById('results').innerHTML = '';
+    document.getElementById('resp-stats').innerHTML = '';
+    rc.width = rc.clientWidth; rc.height = 1; lastResp = null;
   }
 
   const fmt = (v) => (v < 0 ? '−' : '') + Math.abs(v).toFixed(2);
@@ -201,9 +208,70 @@
     ctx.fillText('ωd  [rad/s]', 0, 0); ctx.restore();
   }
 
+
+  // ---- speed response: rated-speed step at t = 0, then the load torque once the speed has settled ----
+  function response(res) {
+    const el = document.getElementById('resp-stats');
+    if (!res.pole) { el.innerHTML = ''; rc.height = 1; lastResp = null; return; }
+    const m = PMSM.simulate(res.params, res.gains, STRUCTURE, { sigma: res.pole.sigma });
+    lastResp = m;
+    const stat = (k, v) => '<div class="stat"><div class="k">' + k + '</div><div class="v">' + v + '</div></div>';
+    el.innerHTML = stat('Peak time t<sub>p</sub>', m.tp.toFixed(3) + ' s') +
+      stat('Overshoot', m.Mp.toFixed(1) + ' %') +
+      stat('Load fluctuation F<sub>p</sub>', m.Fp.toFixed(1) + ' %' + (m.Fp <= res.params.Fp ? '' : ' (above limit)'));
+    drawResp(m);
+  }
+
+  function drawResp(m) {
+    const css = getComputedStyle(document.documentElement);
+    const col = (n) => css.getPropertyValue(n).trim();
+    const dpr = window.devicePixelRatio || 1;
+    const cw = rc.clientWidth, ch = Math.max(240, Math.round(cw * 0.4));
+    rc.width = Math.round(cw * dpr); rc.height = Math.round(ch * dpr); rc.style.height = ch + 'px';
+    const c = rctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, cw, ch);
+    const L = 62, R = 14, T = 14, Bm = 46, pw = cw - L - R, ph = ch - T - Bm;
+    const ymax = Math.max(m.peak.rpm, m.rated) * 1.18;
+    const px = (t) => L + t / m.T * pw, py = (v) => T + (1 - v / ymax) * ph;
+    c.font = '13px system-ui, sans-serif'; c.lineWidth = 1;
+    const xt = niceTicks(0, m.T, 7), yt = niceTicks(0, ymax, 5);
+    c.strokeStyle = col('--grid'); c.fillStyle = col('--fg');
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    xt.forEach((v) => { c.beginPath(); c.moveTo(px(v), T); c.lineTo(px(v), T + ph); c.stroke(); c.fillText(String(+v.toFixed(3)), px(v), T + ph + 6); });
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    yt.forEach((v) => { c.beginPath(); c.moveTo(L, py(v)); c.lineTo(L + pw, py(v)); c.stroke(); c.fillText(String(+(v / 1e4).toFixed(2)), L - 8, py(v)); });
+    c.save(); c.beginPath(); c.rect(L, T, pw, ph); c.clip();
+    // rated speed and load-step marker
+    c.setLineDash([2, 4]); c.strokeStyle = col('--muted'); c.beginPath(); c.moveTo(L, py(m.rated)); c.lineTo(L + pw, py(m.rated)); c.stroke();
+    c.setLineDash([6, 4]); c.beginPath(); c.moveTo(px(m.tl), T); c.lineTo(px(m.tl), T + ph); c.stroke();
+    // peak time
+    c.strokeStyle = col('--fg'); c.beginPath(); c.moveTo(px(m.peak.t), py(0)); c.lineTo(px(m.peak.t), py(m.peak.rpm)); c.stroke();
+    c.setLineDash([]);
+    // response
+    c.strokeStyle = col('--fg'); c.lineWidth = 2; c.beginPath();
+    m.t.forEach((t, i) => { if (i) c.lineTo(px(t), py(m.rpm[i])); else c.moveTo(px(t), py(m.rpm[i])); });
+    c.stroke(); c.lineWidth = 1;
+    // markers and labels
+    const dot = (x, y, color) => { c.fillStyle = color; c.beginPath(); c.arc(x, y, 4, 0, 2 * Math.PI); c.fill(); };
+    dot(px(m.peak.t), py(m.peak.rpm), col('--pole')); dot(px(m.dip.t), py(m.dip.rpm), col('--fp'));
+    c.font = '13px system-ui, sans-serif'; c.textBaseline = 'middle';
+    c.fillStyle = col('--pole'); c.textAlign = 'left';
+    c.fillText(m.Mp.toFixed(1) + '% overshoot', px(m.peak.t) + 14, py(m.peak.rpm) - 12);
+    c.fillStyle = col('--fp'); c.textAlign = 'left';
+    c.fillText('Fₚ = ' + m.Fp.toFixed(1) + '% undershoot', px(m.dip.t) + 10, py(m.dip.rpm) + 18);
+    c.fillStyle = col('--muted'); c.textAlign = 'left'; c.font = '12px system-ui, sans-serif';
+    c.fillText('load step', px(m.tl) + 6, T + 10);
+    c.save(); c.translate(px(m.peak.t) - 6, py(0) - 8); c.rotate(-Math.PI / 2); c.textAlign = 'left'; c.fillStyle = col('--fg');
+    c.fillText('tₚ = ' + m.tp.toFixed(3) + ' s', 0, 0); c.restore();
+    c.restore();
+    c.strokeStyle = col('--fg'); c.strokeRect(L, T, pw, ph);
+    c.fillStyle = col('--fg'); c.textAlign = 'center'; c.textBaseline = 'alphabetic'; c.font = '14px system-ui, sans-serif';
+    c.fillText('Time  [s]', L + pw / 2, ch - 8);
+    c.save(); c.translate(16, T + ph / 2); c.rotate(-Math.PI / 2); c.fillText('Speed  [r/min, ×10⁴]', 0, 0); c.restore();
+  }
+
   let rt = null;
-  window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => last && draw(last), 80); });
-  if (window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => last && draw(last));
+  window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (last) draw(last); if (lastResp) drawResp(lastResp); }, 80); });
+  if (window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (last) draw(last); if (lastResp) drawResp(lastResp); });
 
   setDefaults();
 })();

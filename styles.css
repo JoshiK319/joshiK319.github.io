@@ -196,9 +196,19 @@ strong, b{ font-weight:600; color:var(--ink); }
 .tool-diagram .blk{ fill:none; stroke:currentColor; stroke-width:1.7; }
 .tool-diagram .ln{ stroke:currentColor; stroke-width:1.7; fill:none; }
 .tool-plot{
-  display:block; width:100%; height:138px; margin-top:8px; border-radius:9px; cursor:crosshair; touch-action:none;
+  display:block; width:100%; height:116px; margin-top:6px; border-radius:9px; cursor:crosshair; touch-action:none;
   background:rgba(13,17,23,0.55); border:1px solid rgba(238,241,245,0.08);
 }
+.tool-plot[hidden]{ display:none; }
+.tool-resp{ cursor:default; }
+.tool-tabs{ display:flex; gap:4px; margin-top:8px; }
+.tool-tabs button{
+  font:inherit; font-size:0.68rem; letter-spacing:0.04em; text-transform:uppercase; cursor:pointer;
+  padding:3px 9px; border-radius:999px; color:var(--ink-dim); background:transparent; border:1px solid rgba(238,241,245,0.16);
+}
+.tool-tabs button:hover{ color:var(--ink); border-color:rgba(238,241,245,0.35); }
+.tool-tabs button.on{ color:var(--bg-deep); background:var(--copper); border-color:var(--copper); }
+.tool-tabs button:focus-visible{ outline:2px solid var(--copper); outline-offset:2px; }
 .tool-plot:focus-visible{ outline:2px solid var(--copper); outline-offset:2px; }
 .tool-sliders{ display:grid; grid-template-columns:repeat(3, 1fr); gap:0.6rem; margin-top:8px; }
 .tool-sliders label{ display:block; font-size:0.72rem; color:var(--ink-dim); }
